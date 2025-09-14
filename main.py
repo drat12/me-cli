@@ -2,147 +2,28 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import sys
-import os
-import json
 from datetime import datetime
-from rich.console import Console
-from rich.panel import Panel
-from rich.table import Table
-from rich.box import ROUNDED
 from app.menus.util import clear_screen, pause
-from app.client.engsel import *
+from app.client.engsel import get_balance
 from app.service.auth import AuthInstance
 from app.menus.bookmark import show_bookmark_menu
 from app.menus.account import show_account_menu
 from app.menus.package import fetch_my_packages, get_packages_by_family
 from app.menus.hot import show_hot_menu
+from app.theme import _c, console, set_theme
 
-# ========= Theme presets + persist =========
-_THEME_FILE = "theme.json"
+from rich.panel import Panel
+from rich.table import Table
+from rich.box import ROUNDED
 
-THEMES = {
-    "dark_neon": {
-        "border_primary": "#7C3AED",
-        "border_info": "#06B6D4",
-        "border_success": "#10B981",
-        "border_warning": "#F59E0B",
-        "border_error": "#EF4444",
-        "text_title": "bold #E5E7EB",
-        "text_sub": "bold #22D3EE",
-        "text_ok": "bold #34D399",
-        "text_warn": "bold #FBBF24",
-        "text_err": "bold #F87171",
-        "text_body": "#D1D5DB",
-        "text_key": "#A78BFA",
-        "text_value": "bold #F3F4F6",
-        "text_money": "bold #34D399",
-        "text_date": "bold #FBBF24",
-        "text_number": "#C084FC",
-        "gradient_start": "#22D3EE",
-        "gradient_end": "#A78BFA",
-    },
-    "default": {
-        "border_primary": "magenta",
-        "border_info": "cyan",
-        "border_success": "green",
-        "border_warning": "yellow",
-        "border_error": "red",
-        "text_title": "bold white",
-        "text_sub": "bold cyan",
-        "text_ok": "bold green",
-        "text_warn": "bold yellow",
-        "text_err": "bold red",
-        "text_body": "white",
-        "text_key": "magenta",
-        "text_value": "bold white",
-        "text_money": "bold green",
-        "text_date": "bold yellow",
-        "text_number": "magenta",
-        "gradient_start": "#8A2BE2",
-        "gradient_end": "#00FFFF",
-    },
-    "red_black": {
-        "border_primary": "#EF4444",
-        "border_info": "#F87171",
-        "border_success": "#22C55E",
-        "border_warning": "#F59E0B",
-        "border_error": "#DC2626",
-        "text_title": "bold #F3F4F6",
-        "text_sub": "bold #EF4444",
-        "text_ok": "bold #22C55E",
-        "text_warn": "bold #F59E0B",
-        "text_err": "bold #F87171",
-        "text_body": "#E5E7EB",
-        "text_key": "#F87171",
-        "text_value": "bold #F3F4F6",
-        "text_money": "bold #22C55E",
-        "text_date": "bold #FBBF24",
-        "text_number": "#EF4444",
-        "gradient_start": "#DC2626",
-        "gradient_end": "#F59E0B",
-    },
-    "emerald_glass": {
-        "border_primary": "#10B981",
-        "border_info": "#34D399",
-        "border_success": "#059669",
-        "border_warning": "#A3E635",
-        "border_error": "#EF4444",
-        "text_title": "bold #ECFDF5",
-        "text_sub": "bold #34D399",
-        "text_ok": "bold #22C55E",
-        "text_warn": "bold #A3E635",
-        "text_err": "bold #F87171",
-        "text_body": "#D1FAE5",
-        "text_key": "#6EE7B7",
-        "text_value": "bold #F0FDFA",
-        "text_money": "bold #22C55E",
-        "text_date": "bold #A3E635",
-        "text_number": "#10B981",
-        "gradient_start": "#34D399",
-        "gradient_end": "#A7F3D0",
-    },
-}
-
-def _load_theme_name():
-    try:
-        if os.path.exists(_THEME_FILE):
-            with open(_THEME_FILE, "r", encoding="utf8") as f:
-                return json.load(f).get("name", "dark_neon")
-    except Exception:
-        pass
-    return "dark_neon"
-
-def _save_theme_name(name: str):
-    try:
-        with open(_THEME_FILE, "w", encoding="utf8") as f:
-            json.dump({"name": name}, f)
-    except Exception:
-        pass
-
-_theme_name = _load_theme_name()
-THEME = THEMES.get(_theme_name, THEMES["dark_neon"]).copy()
-
-def set_theme(name: str):
-    global THEME, _theme_name
-    if name in THEMES:
-        THEME = THEMES[name].copy()
-        _theme_name = name
-        _save_theme_name(name)
-        return True
-    return False
-
-def _c(key: str) -> str:
-    return THEME.get(key, "white")
-
-console = Console()
+# ========== Tampilan Panel ==========
 
 def _print_centered_panel(renderable, title="", border_style=""):
-    """Print Rich panel with centered title and custom border."""
     panel = Panel(
         renderable,
         title=title,
         border_style=border_style,
-        padding=(0,2),
+        padding=(0, 2),
         expand=True,
         title_align="center"
     )
@@ -150,26 +31,23 @@ def _print_centered_panel(renderable, title="", border_style=""):
 
 def show_banner():
     clear_screen()
-    pass
+    banner_text = f"[{_c('text_title')}]Selamat Datang di MyXL CLI[/]"
+    _print_centered_panel(banner_text, title="Banner", border_style=_c("border_primary"))
 
 def show_main_menu(number, balance, balance_expired_at):
     clear_screen()
     show_banner()
-    phone_number = number
-    remaining_balance = balance
     expired_at_dt = datetime.fromtimestamp(balance_expired_at).strftime("%Y-%m-%d %H:%M:%S")
 
-    # Panel Informasi Akun
-    info = Table.grid(padding=(0,2))
+    info = Table.grid(padding=(0, 2))
     info.add_column(justify="right", style=_c("text_sub"))
     info.add_column(style=_c("text_body"))
-    info.add_row("Nomor", f"[{_c('text_value')}]{phone_number}[/]")
-    info.add_row("Pulsa", f"[{_c('text_money')}]Rp {remaining_balance:,}[/]")
+    info.add_row("Nomor", f"[{_c('text_value')}]{number}[/]")
+    info.add_row("Pulsa", f"[{_c('text_money')}]Rp {balance:,}[/]")
     info.add_row("Masa Aktif", f"[{_c('text_date')}]{expired_at_dt}[/]")
     _print_centered_panel(info, title=f"[{_c('text_title')}]Informasi Akun[/]", border_style=_c("border_info"))
 
-    # ======= Main Menu =======
-    menu = Table(show_header=False, box=ROUNDED, padding=(0,1), expand=True)
+    menu = Table(show_header=False, box=ROUNDED, padding=(0, 1), expand=True)
     menu.add_column("key", justify="right", style=_c("text_number"), no_wrap=True, width=4)
     menu.add_column("desc", style=_c("text_body"))
     menu.add_row("[bold]1[/]", "Login/Ganti akun")
@@ -182,8 +60,12 @@ def show_main_menu(number, balance, balance_expired_at):
     menu.add_row("[bold]99[/]", f"[{_c('text_err')}]Tutup aplikasi[/]")
     _print_centered_panel(menu, title=f"[{_c('text_title')}]Menu[/]", border_style=_c("border_primary"))
 
+# ========== Tema Preset ==========
+
 def show_theme_presets():
     console.print(f"\n[{_c('text_title')}]Ganti Tema (Preset)[/{_c('text_title')}]")
+    from app.theme import THEMES  # Import lokal agar tidak circular
+    from app.theme import get_active_theme_name
     theme_names = list(THEMES.keys())
     table = Table(show_header=True, box=ROUNDED, expand=True)
     table.add_column("No", justify="center", style=_c("text_sub"))
@@ -198,16 +80,13 @@ def show_theme_presets():
             f"[{preset['border_error']}]■[/{preset['border_error']}] "
             f"[{preset['text_title']}]A[/{preset['text_title']}]"
         )
-        aktif = " (aktif)" if name == _theme_name else ""
-        table.add_row(
-            f"{idx}",
-            f"{name}{aktif}",
-            preview
-        )
+        aktif = " (aktif)" if name == get_active_theme_name() else ""
+        table.add_row(str(idx), f"{name}{aktif}", preview)
     console.print(table)
 
 def menu_ganti_theme():
     clear_screen()
+    from app.theme import THEMES
     show_theme_presets()
     theme_names = list(THEMES.keys())
     pilihan = console.input(f"\n[{_c('text_sub')}]Masukkan nomor tema yang diinginkan:[/{_c('text_sub')}] ").strip()
@@ -215,7 +94,7 @@ def menu_ganti_theme():
         idx = int(pilihan) - 1
         if idx < 0 or idx >= len(theme_names):
             pesan_error("Pilihan tema tidak valid.")
-        elif theme_names[idx] == _theme_name:
+        elif theme_names[idx] == theme_names[idx]:
             pesan_info(f"Tema '{theme_names[idx]}' sudah aktif.")
         else:
             set_theme(theme_names[idx])
@@ -223,6 +102,8 @@ def menu_ganti_theme():
     except Exception:
         pesan_error("Input tidak valid.")
     pause()
+
+# ========== Pesan Utility ==========
 
 def pesan_error(msg):
     console.print(f"[{_c('text_err')}]{msg}[/{_c('text_err')}]")
@@ -232,6 +113,8 @@ def pesan_sukses(msg):
 
 def pesan_info(msg):
     console.print(f"[{_c('text_warn')}]{msg}[/{_c('text_warn')}]")
+
+# ========== Main Loop ==========
 
 def main():
     while True:
@@ -256,14 +139,12 @@ def main():
                     pesan_sukses("Akun berhasil diganti.")
                 else:
                     pesan_error("Tidak ada user yang dipilih atau gagal memuat user.")
-                continue
             elif choice == "2":
                 try:
                     fetch_my_packages()
                     pesan_sukses("Paket berhasil ditampilkan.")
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan paket: {e}")
-                continue
             elif choice == "3":
                 try:
                     show_hot_menu()
@@ -291,7 +172,6 @@ def main():
                     pesan_error(f"Gagal menampilkan paket enterprise: {e}")
             elif choice == "69":
                 menu_ganti_theme()
-                continue
             elif choice == "00":
                 try:
                     show_bookmark_menu()
@@ -301,8 +181,6 @@ def main():
             elif choice == "99":
                 pesan_info("Exiting the application.")
                 sys.exit(0)
-            elif choice == "9":
-                pass
             else:
                 pesan_error("Pilihan tidak valid. Silakan coba lagi.")
                 pause()
@@ -315,10 +193,5 @@ def main():
             else:
                 pesan_error("Tidak ada user yang dipilih atau gagal memuat user.")
 
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        pesan_info("Exiting the application.")
-    except Exception as e:
-        pesan_error(f"Terjadi kesalahan: {e}")
+# ========== Entry Point ==========
+
