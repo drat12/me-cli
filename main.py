@@ -5,7 +5,6 @@ import sys
 from datetime import datetime
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 from app.menus.util import clear_screen, pause
 from app.client.engsel import *
 from app.service.auth import AuthInstance
@@ -22,7 +21,7 @@ def show_main_menu(number, balance, balance_expired_at):
     remaining_balance = balance
     expired_at_dt = datetime.fromtimestamp(balance_expired_at).strftime("%Y-%m-%d %H:%M:%S")
 
-    # Panel: Informasi Akun (expand sesuai terminal)
+    # Panel: Informasi Akun
     info_akun = (
         f"[bold magenta]Nomor:[/bold magenta] {phone_number}\n"
         f"[bold magenta]Pulsa:[/bold magenta] Rp {remaining_balance}\n"
@@ -30,21 +29,18 @@ def show_main_menu(number, balance, balance_expired_at):
     )
     console.print(Panel(info_akun, title="[bold yellow]Informasi Akun[/bold yellow]", border_style="cyan", expand=True))
 
-    # Tabel: Menu Utama
-    table = Table(title="Menu Utama", show_header=True, header_style="bold yellow", expand=True)
-    table.add_column("No", style="bold cyan", width=6, justify="right")
-    table.add_column("Menu", style="bold", justify="left")
-
-    table.add_row("1", "Login/Ganti akun")
-    table.add_row("2", "Lihat Paket Saya")
-    table.add_row("3", "Beli Paket 🔥 HOT 🔥")
-    table.add_row("4", "Beli Paket Berdasarkan Family Code")
-    table.add_row("5", "Beli Paket Berdasarkan Family Code (Enterprise)")
-    table.add_row("00", "Bookmark Paket")
-    table.add_row("99", "Tutup aplikasi")
-
-    console.print(Panel(table, border_style="green", expand=True))
-
+    # Menu Utama langsung daftar, tanpa tabel dan header
+    menu_items = [
+        "[bold cyan]1.[/bold cyan] Login/Ganti akun",
+        "[bold cyan]2.[/bold cyan] Lihat Paket Saya",
+        "[bold cyan]3.[/bold cyan] Beli Paket 🔥 HOT 🔥",
+        "[bold cyan]4.[/bold cyan] Beli Paket Berdasarkan Family Code",
+        "[bold cyan]5.[/bold cyan] Beli Paket Berdasarkan Family Code (Enterprise)",
+        "[bold cyan]00.[/bold cyan] Bookmark Paket",
+        "[bold cyan]99.[/bold cyan] Tutup aplikasi"
+    ]
+    menu_text = "\n".join(menu_items)
+    console.print(Panel(menu_text, title="[bold yellow]Menu Utama[/bold yellow]", border_style="green", expand=True))
 
 def pesan_error(msg):
     console.print(f"[bold red]{msg}[/bold red]")
