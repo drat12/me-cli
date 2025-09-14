@@ -36,7 +36,7 @@ def show_main_menu(number, balance, balance_expired_at):
             border_style="cyan",
             expand=True,
             padding=(0,2),
-            title_align="left"
+            title_align="right"
         )
     )
 
@@ -45,13 +45,14 @@ def show_main_menu(number, balance, balance_expired_at):
     table.add_column("", justify="right", width=6)
     table.add_column("Menu", justify="left")
     menu_items = [
-        ("[bold cyan]1.[/bold cyan]", "Login/Ganti akun"),
-        ("[bold cyan]2.[/bold cyan]", "Lihat Paket Saya"),
-        ("[bold cyan]3.[/bold cyan]", "Beli Paket 🔥 HOT 🔥"),
-        ("[bold cyan]4.[/bold cyan]", "Beli Paket Berdasarkan Family Code"),
-        ("[bold cyan]5.[/bold cyan]", "Beli Paket Berdasarkan Family Code (Enterprise)"),
-        ("[bold cyan]00.[/bold cyan]", "Bookmark Paket"),
-        ("[bold cyan]99.[/bold cyan]", "Tutup aplikasi")
+        ("[bold cyan]1[/bold cyan]", "Login/Ganti akun"),
+        ("[bold cyan]2[/bold cyan]", "Lihat Paket Saya"),
+        ("[bold cyan]3[/bold cyan]", "Beli Paket 🔥 HOT 🔥"),
+        ("[bold cyan]4[/bold cyan]", "Beli Paket Berdasarkan Family Code"),
+        ("[bold cyan]5[/bold cyan]", "Beli Paket Berdasarkan Family Code (Enterprise)"),
+        ("[bold cyan]00.
+[/bold cyan]", "Bookmark Paket"),
+        ("[bold cyan]99[/bold cyan]", "Tutup aplikasi")
     ]
     for num, name in menu_items:
         table.add_row(num, name)
