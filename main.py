@@ -174,7 +174,7 @@ def show_main_menu(number, balance, balance_expired_at):
     menu.add_column("desc", style=_c("text_body"))
     menu.add_row("[bold]1[/]", "Login/Ganti akun")
     menu.add_row("[bold]2[/]", "Lihat Paket Saya")
-    menu.add_row("[bold]3[/]", "Dor Paket XUT")
+    menu.add_row("[bold]3[/]", "Beli Paket [{_c('text_warn')}]🔥 HOT 🔥")
     menu.add_row("[bold]4[/]", "Dor Paket Masa Aktif")
     menu.add_row("[bold]5[/]", "Dor Paket Lainnya..")
     menu.add_row("[bold]6[/]", "Input Family Code Sendiri")
