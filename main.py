@@ -188,8 +188,6 @@ def show_main_menu(number, balance, balance_expired_at):
             expand=True
         )
     )
-    # Menu ganti tema dan preview preset
-    show_theme_presets()
 
 def show_theme_presets():
     console.print(f"\n[{_c('text_title')}]Ganti Tema (Preset)[/{_c('text_title')}]")
@@ -214,12 +212,11 @@ def show_theme_presets():
             preview
         )
     console.print(table)
-    console.print(f"[{_c('text_sub')}]Ketik 69 untuk mengganti gaya tema.[/{_c('text_sub')}]")
 
 def menu_ganti_theme():
     clear_screen()
-    theme_names = list(THEMES.keys())
     show_theme_presets()
+    theme_names = list(THEMES.keys())
     pilihan = console.input(f"\n[{_c('text_sub')}]Masukkan nomor tema yang diinginkan:[/{_c('text_sub')}] ").strip()
     try:
         idx = int(pilihan) - 1
