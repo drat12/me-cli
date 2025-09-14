@@ -149,7 +149,7 @@ def _print_centered_panel(renderable, title="", border_style=""):
     console.print(panel)
 
 def show_banner():
-    clear_screen()
+    clear_screen():
         header = Panel.fit(
             Align.center(Text.assemble(
                 ("✦ ", _c("text_key")),
