@@ -166,7 +166,7 @@ def show_main_menu(number, balance, balance_expired_at):
         ("[bold cyan]2[/bold cyan]", "Lihat Paket Saya"),
         ("[bold cyan]3[/bold cyan]", "Beli Paket 🔥 HOT 🔥"),
         ("[bold cyan]4[/bold cyan]", "Input Family Code"),
-        ("[bold cyan]5[/bold cyan]", Input Family Code (Enterprise)"),
+        ("[bold cyan]5[/bold cyan]", "Input Family Code (Enterprise)"),
         ("[bold cyan]00[/bold cyan]", "Bookmark Paket"),
         ("[bold cyan]69[/bold cyan]", "Ganti Gaya"),
         ("[bold red]99[/bold red]", "Tutup aplikasi")
