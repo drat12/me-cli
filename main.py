@@ -149,15 +149,7 @@ def _print_centered_panel(renderable, title="", border_style=""):
     console.print(panel)
 
 def show_banner():
-    clear_screen():
-        header = Panel.fit(
-            Align.center(Text.assemble(
-                ("✦ ", _c("text_key")),
-                ("Panel Dor Paket v0.3 ©2025", _c("text_title")),
-                (" by ", "dim"),
-                ("Flyxt9", _c("text_sub")),
-                (" ✦", _c("text_key"))
-            )),
+    clear_screen()
             title=f"[{_c('text_title')}]SELAMAT DATANG[/]",
             subtitle="[dim]Custom by barbex_id[/]",
             border_style=_c("border_primary"),
