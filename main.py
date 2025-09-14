@@ -144,9 +144,9 @@ def show_main_menu(number, balance, balance_expired_at):
 
     # Panel Informasi Akun
     info_akun = (
-        f"[{_c('text_key')}]     Nomor[/{_c('text_key')}] [{_c('text_value')}] {phone_number}[/{_c('text_value')}]\n"
-        f"[{_c('text_key')}]     Pulsa[/{_c('text_key')}] [{_c('text_money')}] Rp {remaining_balance}[/{_c('text_money')}]\n"
-        f"[{_c('text_key')}]Masa aktif[/{_c('text_key')}] [{_c('text_date')}] {expired_at_dt}[/{_c('text_date')}]"
+        f"[{_c('text_sub')}]     Nomor[/{_c('text_key')}] [{_c('text_value')}] {phone_number}[/{_c('text_value')}]\n"
+        f"[{_c('text_sub')}]     Pulsa[/{_c('text_key')}] [{_c('text_money')}] Rp {remaining_balance}[/{_c('text_money')}]\n"
+        f"[{_c('text_sub')}]Masa aktif[/{_c('text_key')}] [{_c('text_date')}] {expired_at_dt}[/{_c('text_date')}]"
     )
     console.print(
         Panel(
