@@ -194,4 +194,11 @@ def main():
                 pesan_error("Tidak ada user yang dipilih atau gagal memuat user.")
 
 # ========== Entry Point ==========
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        pesan_info("Exiting the application.")
+    except Exception as e:
+        pesan_error(f"Terjadi kesalahan: {e}")
 
