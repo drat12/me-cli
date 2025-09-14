@@ -6,6 +6,7 @@ from datetime import datetime
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+from rich import box
 from app.menus.util import clear_screen, pause
 from app.client.engsel import *
 from app.service.auth import AuthInstance
@@ -30,8 +31,8 @@ def show_main_menu(number, balance, balance_expired_at):
     )
     console.print(Panel(info_akun, title="[bold yellow]Informasi Akun[/bold yellow]", border_style="cyan", expand=True))
 
-    # Tabel menu utama tanpa header (hanya satu kolom)
-    table = Table(show_header=False, box=None, expand=True)
+    # Tabel menu utama dengan box rounded tanpa header (hanya satu kolom)
+    table = Table(show_header=False, box=box.ROUNDED, expand=True)
     table.add_column(justify="left")
     menu_items = [
         "[bold cyan]1.[/bold cyan] Login/Ganti akun",
