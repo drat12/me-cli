@@ -1,11 +1,10 @@
 from dotenv import load_dotenv
-load_dotenv() 
+load_dotenv()
 
 import sys
 from datetime import datetime
 from rich.console import Console
 from rich.panel import Panel
-from rich.theme import Theme
 from app.menus.util import clear_screen, pause
 from app.client.engsel import *
 from app.service.auth import AuthInstance
@@ -14,16 +13,7 @@ from app.menus.account import show_account_menu
 from app.menus.package import fetch_my_packages, get_packages_by_family
 from app.menus.hot import show_hot_menu
 
-# Custom theme for Rich
-custom_theme = Theme({
-    "error": "bold red",
-    "success": "bold green",
-    "info": "bold yellow",
-    "menu": "bold cyan",
-    "account": "bold magenta",
-    "title": "bold yellow"
-})
-console = Console(theme=custom_theme)
+console = Console()
 
 def show_main_menu(number, balance, balance_expired_at):
     clear_screen()
@@ -33,33 +23,33 @@ def show_main_menu(number, balance, balance_expired_at):
     expired_at_dt = datetime.fromtimestamp(expired_at).strftime("%Y-%m-%d %H:%M:%S")
 
     info_akun = (
-        f"[account]Nomor:[/account] {phone_number}\n"
-        f"[account]Pulsa:[/account] Rp {remaining_balance}\n"
-        f"[account]Masa aktif:[/account] {expired_at_dt}\n"
+        f"[bold magenta]Nomor:[/bold magenta] {phone_number}\n"
+        f"[bold magenta]Pulsa:[/bold magenta] Rp {remaining_balance}\n"
+        f"[bold magenta]Masa aktif:[/bold magenta] {expired_at_dt}\n"
     )
     menu_text = (
-        "[menu]1.[/menu] Login/Ganti akun\n"
-        "[menu]2.[/menu] Lihat Paket Saya\n"
-        "[menu]3.[/menu] Beli Paket 🔥 HOT 🔥\n"
-        "[menu]4.[/menu] Beli Paket Berdasarkan Family Code\n"
-        "[menu]5.[/menu] Beli Paket Berdasarkan Family Code (Enterprise)\n"
-        "[menu]00.[/menu] Bookmark Paket\n"
-        "[menu]99.[/menu] Tutup aplikasi"
+        "[bold cyan]1.[/bold cyan] Login/Ganti akun\n"
+        "[bold cyan]2.[/bold cyan] Lihat Paket Saya\n"
+        "[bold cyan]3.[/bold cyan] Beli Paket 🔥 HOT 🔥\n"
+        "[bold cyan]4.[/bold cyan] Beli Paket Berdasarkan Family Code\n"
+        "[bold cyan]5.[/bold cyan] Beli Paket Berdasarkan Family Code (Enterprise)\n"
+        "[bold cyan]00.[/bold cyan] Bookmark Paket\n"
+        "[bold cyan]99.[/bold cyan] Tutup aplikasi"
     )
     panel_content = (
-        f"[title]Informasi Akun[/title]\n{info_akun}\n"
-        f"[title]Menu Utama[/title]\n{menu_text}"
+        f"[bold yellow underline]Informasi Akun[/bold yellow underline]\n{info_akun}\n"
+        f"[bold yellow underline]Menu Utama[/bold yellow underline]\n{menu_text}"
     )
     console.print(Panel(panel_content, title="me-cli Dashboard", border_style="cyan", expand=False))
 
 def pesan_error(msg):
-    console.print(f"[error]{msg}[/error]")
+    console.print(f"[bold red]{msg}[/bold red]")
 
 def pesan_sukses(msg):
-    console.print(f"[success]{msg}[/success]")
+    console.print(f"[bold green]{msg}[/bold green]")
 
 def pesan_info(msg):
-    console.print(f"[info]{msg}[/info]")
+    console.print(f"[bold yellow]{msg}[/bold yellow]")
 
 def main():
     while True:
@@ -78,7 +68,7 @@ def main():
 
             show_main_menu(active_user["number"], balance_remaining, balance_expired_at)
 
-            choice = console.input("[menu]Pilih menu:[/menu] ").strip()
+            choice = console.input("[bold cyan]Pilih menu:[/bold cyan] ").strip()
             if choice == "1":
                 selected_user_number = show_account_menu()
                 if selected_user_number:
@@ -100,7 +90,7 @@ def main():
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan menu HOT: {e}")
             elif choice == "4":
-                family_code = console.input("[menu]Masukkan family code (atau '99' untuk batal):[/menu] ").strip()
+                family_code = console.input("[bold cyan]Masukkan family code (atau '99' untuk batal):[/bold cyan] ").strip()
                 if family_code == "99":
                     pesan_info("Aksi dibatalkan.")
                     continue
@@ -110,7 +100,7 @@ def main():
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan paket: {e}")
             elif choice == "5":
-                family_code = console.input("[menu]Masukkan family code (atau '99' untuk batal):[/menu] ").strip()
+                family_code = console.input("[bold cyan]Masukkan family code (atau '99' untuk batal):[/bold cyan] ").strip()
                 if family_code == "99":
                     pesan_info("Aksi dibatalkan.")
                     continue
