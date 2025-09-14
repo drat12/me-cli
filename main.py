@@ -169,7 +169,7 @@ def show_main_menu(number, balance, balance_expired_at):
     _print_centered_panel(info, title=f"[{_c('text_title')}]Informasi Akun[/]", border_style=_c("border_info"))
 
     # ======= Main Menu =======
-    menu = Table(show_header=False, box=ROUNDED, padding=(0,2), expand=True)
+    menu = Table(show_header=False, box=ROUNDED, padding=(0,1), expand=True)
     menu.add_column("key", justify="right", style=_c("text_number"), no_wrap=True, width=4)
     menu.add_column("desc", style=_c("text_body"))
     menu.add_row("[bold]1[/]", "Login/Ganti akun")
