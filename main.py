@@ -149,7 +149,25 @@ def _print_centered_panel(renderable, title="", border_style=""):
     console.print(panel)
 
 def show_banner():
-    # Optional: bisa tambahkan logo/banner di sini jika ingin
+    clear_screen()
+    if RICH_OK:
+        header = Panel.fit(
+            Align.center(Text.assemble(
+                ("✦ ", _c("text_key")),
+                ("Panel Dor Paket v0.3 ©2025", _c("text_title")),
+                (" by ", "dim"),
+                ("Flyxt9", _c("text_sub")),
+                (" ✦", _c("text_key"))
+            )),
+            title=f"[{_c('text_title')}]SELAMAT DATANG[/]",
+            subtitle="[dim]Custom by barbex_id[/]",
+            border_style=_c("border_primary"),
+            box=DOUBLE,
+            padding=(1, 2)
+        )
+        console.print(Align.center(header))
+        _print_gradient_title("Tembak Paket Internet Murah")
+        console.print(Align.center(Rule(style=_c("border_primary"))))
     pass
 
 def show_main_menu(number, balance, balance_expired_at):
