@@ -150,7 +150,6 @@ def _print_centered_panel(renderable, title="", border_style=""):
 
 def show_banner():
     clear_screen()
-    if RICH_OK:
         header = Panel.fit(
             Align.center(Text.assemble(
                 ("✦ ", _c("text_key")),
