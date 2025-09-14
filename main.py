@@ -5,6 +5,7 @@ import sys
 from datetime import datetime
 from rich.console import Console
 from rich.panel import Panel
+from rich.table import Table
 from app.menus.util import clear_screen, pause
 from app.client.engsel import *
 from app.service.auth import AuthInstance
@@ -29,7 +30,9 @@ def show_main_menu(number, balance, balance_expired_at):
     )
     console.print(Panel(info_akun, title="[bold yellow]Informasi Akun[/bold yellow]", border_style="cyan", expand=True))
 
-    # Menu Utama langsung daftar, tanpa tabel dan header
+    # Tabel menu utama tanpa header (hanya satu kolom)
+    table = Table(show_header=False, box=None, expand=True)
+    table.add_column(justify="left")
     menu_items = [
         "[bold cyan]1.[/bold cyan] Login/Ganti akun",
         "[bold cyan]2.[/bold cyan] Lihat Paket Saya",
@@ -39,8 +42,9 @@ def show_main_menu(number, balance, balance_expired_at):
         "[bold cyan]00.[/bold cyan] Bookmark Paket",
         "[bold cyan]99.[/bold cyan] Tutup aplikasi"
     ]
-    menu_text = "\n".join(menu_items)
-    console.print(Panel(menu_text, title="[bold yellow]Menu Utama[/bold yellow]", border_style="green", expand=True))
+    for item in menu_items:
+        table.add_row(item)
+    console.print(Panel(table, title="[bold yellow]Menu Utama[/bold yellow]", border_style="green", expand=True))
 
 def pesan_error(msg):
     console.print(f"[bold red]{msg}[/bold red]")
