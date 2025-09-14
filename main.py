@@ -8,7 +8,7 @@ from datetime import datetime
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
+from rich.box import ROUNDED
 from app.menus.util import clear_screen, pause
 from app.client.engsel import *
 from app.service.auth import AuthInstance
@@ -136,63 +136,57 @@ def _c(key: str) -> str:
 
 console = Console()
 
+def _print_centered_panel(renderable, title="", border_style=""):
+    """Print Rich panel with centered title and custom border."""
+    panel = Panel(
+        renderable,
+        title=title,
+        border_style=border_style,
+        padding=(0,2),
+        expand=True,
+        title_align="center"
+    )
+    console.print(panel)
+
+def show_banner():
+    # Optional: bisa tambahkan logo/banner di sini jika ingin
+    pass
+
 def show_main_menu(number, balance, balance_expired_at):
     clear_screen()
+    show_banner()
     phone_number = number
     remaining_balance = balance
     expired_at_dt = datetime.fromtimestamp(balance_expired_at).strftime("%Y-%m-%d %H:%M:%S")
 
     # Panel Informasi Akun
-    info_akun = (
-        f"[{_c('text_key')}]     Nomor[/{_c('text_key')}] [{_c('text_value')}] {phone_number}[/{_c('text_value')}]\n"
-        f"[{_c('text_key')}]     Pulsa[/{_c('text_key')}] [{_c('text_money')}] Rp {remaining_balance}[/{_c('text_money')}]\n"
-        f"[{_c('text_key')}]Masa aktif[/{_c('text_key')}] [{_c('text_date')}] {expired_at_dt}[/{_c('text_date')}]"
-    )
-    console.print(
-        Panel(
-            info_akun,
-            title=f"[{_c('text_title')}]Informasi Akun[/{_c('text_title')}]",
-            border_style=_c("border_info"),
-            expand=True,
-            padding=(0,2),
-            title_align="center"
-        )
-    )
+    info = Table.grid(padding=(0,2))
+    info.add_column(justify="right", style=_c("text_sub"))
+    info.add_column(style=_c("text_body"))
+    info.add_row("Nomor Anda", f"[{_c('text_value')}]{phone_number}[/]")
+    info.add_row("Sisa Pulsa", f"[{_c('text_money')}]Rp {remaining_balance:,}[/]")
+    info.add_row("Masa Aktif", f"[{_c('text_date')}]{expired_at_dt}[/]")
+    _print_centered_panel(info, title=f"[{_c('text_title')}]Informasi Akun[/]", border_style=_c("border_info"))
 
-    # Menu utama
-    table = Table(
-        show_header=False,
-        box=box.ROUNDED,
-        expand=True,
-        border_style=_c("border_primary")
-    )
-    table.add_column("", justify="right", width=6)
-    table.add_column("Menu", justify="left")
-    menu_items = [
-        (f"[{_c('text_sub')}]1[/{_c('text_sub')}]", f"[{_c('text_body')}]Login/Ganti akun[/{_c('text_body')}]"),
-        (f"[{_c('text_sub')}]2[/{_c('text_sub')}]", f"[{_c('text_body')}]Lihat Paket Saya[/{_c('text_body')}]"),
-        (f"[{_c('text_sub')}]3[/{_c('text_sub')}]", f"[{_c('text_body')}]Beli Paket [{_c('text_warn')}]🔥 HOT 🔥[/{_c('text_warn')}][/{_c('text_body')}]"),
-        (f"[{_c('text_sub')}]4[/{_c('text_sub')}]", f"[{_c('text_body')}]Input Family Code[/{_c('text_body')}]"),
-        (f"[{_c('text_sub')}]5[/{_c('text_sub')}]", f"[{_c('text_body')}]Input Family Code (Enterprise)[/{_c('text_body')}]"),
-        (f"[{_c('text_sub')}]00[/{_c('text_sub')}]", f"[{_c('text_body')}]Bookmark Paket[/{_c('text_body')}]"),
-        (f"[{_c('text_sub')}]69[/{_c('text_sub')}]", f"[{_c('text_body')}]Ganti Gaya[/{_c('text_body')}]"),
-        (f"[{_c('text_err')}]99[/{_c('text_err')}]", f"[{_c('text_err')}]Tutup aplikasi[/{_c('text_err')}]")
-    ]
-    for num, name in menu_items:
-        table.add_row(num, name)
-    console.print(
-        Panel(
-            table,
-            title=f"[{_c('text_title')}]Menu Utama[/{_c('text_title')}]",
-            border_style=_c("border_primary"),
-            expand=True
-        )
-    )
+    # ======= Main Menu =======
+    menu = Table(show_header=False, box=ROUNDED, padding=(0,1), expand=True)
+    menu.add_column("key", justify="right", style=_c("text_number"), no_wrap=True, width=4)
+    menu.add_column("desc", style=_c("text_body"))
+    menu.add_row("[bold]1[/]", "Login/Ganti akun")
+    menu.add_row("[bold]2[/]", "Lihat Paket Saya")
+    menu.add_row("[bold]3[/]", "Dor Paket XUT")
+    menu.add_row("[bold]4[/]", "Dor Paket Masa Aktif")
+    menu.add_row("[bold]5[/]", "Dor Paket Lainnya..")
+    menu.add_row("[bold]6[/]", "Input Family Code Sendiri")
+    menu.add_row("[bold]7[/]", "Input Family Code (Enterprise)")
+    menu.add_row("[bold]69[/]", f"[{_c('text_sub')}]Ganti Gaya[/]")
+    menu.add_row("[bold]00[/]", f"[{_c('text_err')}]Tutup aplikasi[/]")
+    _print_centered_panel(menu, title=f"[{_c('text_title')}]Menu[/]", border_style=_c("border_primary"))
 
 def show_theme_presets():
     console.print(f"\n[{_c('text_title')}]Ganti Tema (Preset)[/{_c('text_title')}]")
     theme_names = list(THEMES.keys())
-    table = Table(show_header=True, box=box.ROUNDED, expand=True)
+    table = Table(show_header=True, box=ROUNDED, expand=True)
     table.add_column("No", justify="center", style=_c("text_sub"))
     table.add_column("Nama Preset", style=_c("text_title"))
     table.add_column("Preview Warna", style=_c("text_body"))
@@ -277,6 +271,10 @@ def main():
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan menu HOT: {e}")
             elif choice == "4":
+                pesan_info("Fitur Dor Paket Masa Aktif belum tersedia.")
+            elif choice == "5":
+                pesan_info("Fitur Dor Paket Lainnya belum tersedia.")
+            elif choice == "6":
                 family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (atau '99' untuk batal):[/{_c('text_sub')}] ").strip()
                 if family_code == "99":
                     pesan_info("Aksi dibatalkan.")
@@ -286,7 +284,7 @@ def main():
                     pesan_sukses("Paket berdasarkan family code berhasil ditampilkan.")
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan paket: {e}")
-            elif choice == "5":
+            elif choice == "7":
                 family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (atau '99' untuk batal):[/{_c('text_sub')}] ").strip()
                 if family_code == "99":
                     pesan_info("Aksi dibatalkan.")
