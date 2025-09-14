@@ -32,7 +32,7 @@ def show_main_menu(number, balance, balance_expired_at):
 
     # Tabel: Menu Utama
     table = Table(title="Menu Utama", show_header=True, header_style="bold yellow", expand=True)
-    table.add_column("No", style="bold cyan", width=6, justify="center")
+    table.add_column("No", style="bold cyan", width=6, justify="left")
     table.add_column("Menu", style="bold", justify="left")
 
     table.add_row("1", "Login/Ganti akun")
