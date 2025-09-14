@@ -150,9 +150,6 @@ def _print_centered_panel(renderable, title="", border_style=""):
 
 def show_banner():
     clear_screen()
-        console.print(Align.center(header))
-        _print_gradient_title("Tembak Paket Internet Murah")
-        console.print(Align.center(Rule(style=_c("border_primary"))))
     pass
 
 def show_main_menu(number, balance, balance_expired_at):
