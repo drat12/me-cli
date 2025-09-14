@@ -169,7 +169,7 @@ def show_main_menu(number, balance, balance_expired_at):
         ("[bold cyan]5[/bold cyan]", "Beli Paket Berdasarkan Family Code (Enterprise)"),
         ("[bold cyan]6[/bold cyan]", "Ganti Tema"),
         ("[bold cyan]00[/bold cyan]", "Bookmark Paket"),
-        ("[bold cyan]99[/bold cyan]", "Tutup aplikasi")
+        ("[bold red]99[/bold red]", "Tutup aplikasi")
     ]
     for num, name in menu_items:
         table.add_row(num, name)
