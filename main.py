@@ -174,13 +174,12 @@ def show_main_menu(number, balance, balance_expired_at):
     menu.add_column("desc", style=_c("text_body"))
     menu.add_row("[bold]1[/]", "Login/Ganti akun")
     menu.add_row("[bold]2[/]", "Lihat Paket Saya")
-    menu.add_row("[bold]3[/]", "Beli Paket [{_c('text_warn')}]🔥 HOT 🔥")
-    menu.add_row("[bold]4[/]", "Dor Paket Masa Aktif")
-    menu.add_row("[bold]5[/]", "Dor Paket Lainnya..")
-    menu.add_row("[bold]6[/]", "Input Family Code Sendiri")
-    menu.add_row("[bold]7[/]", "Input Family Code (Enterprise)")
+    menu.add_row("[bold]3[/]", "Beli Paket 🔥 HOT 🔥")
+    menu.add_row("[bold]4[/]", "Input Family Code")
+    menu.add_row("[bold]5[/]", "Input Family Code (Enterprise)")
+    menu.add_row("[bold]00[/]", "Bookmark Paket")
     menu.add_row("[bold]69[/]", f"[{_c('text_sub')}]Ganti Gaya[/]")
-    menu.add_row("[bold]00[/]", f"[{_c('text_err')}]Tutup aplikasi[/]")
+    menu.add_row("[bold]99[/]", f"[{_c('text_err')}]Tutup aplikasi[/]")
     _print_centered_panel(menu, title=f"[{_c('text_title')}]Menu[/]", border_style=_c("border_primary"))
 
 def show_theme_presets():
@@ -271,10 +270,6 @@ def main():
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan menu HOT: {e}")
             elif choice == "4":
-                pesan_info("Fitur Dor Paket Masa Aktif belum tersedia.")
-            elif choice == "5":
-                pesan_info("Fitur Dor Paket Lainnya belum tersedia.")
-            elif choice == "6":
                 family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (atau '99' untuk batal):[/{_c('text_sub')}] ").strip()
                 if family_code == "99":
                     pesan_info("Aksi dibatalkan.")
@@ -284,7 +279,7 @@ def main():
                     pesan_sukses("Paket berdasarkan family code berhasil ditampilkan.")
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan paket: {e}")
-            elif choice == "7":
+            elif choice == "5":
                 family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (atau '99' untuk batal):[/{_c('text_sub')}] ").strip()
                 if family_code == "99":
                     pesan_info("Aksi dibatalkan.")
