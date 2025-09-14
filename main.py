@@ -29,10 +29,22 @@ def _print_centered_panel(renderable, title="", border_style=""):
     )
     console.print(panel)
 
+from rich.align import Align
+from app.theme import _c, console
+
 def show_banner():
     clear_screen()
-    banner_text = f"[{_c('text_title')}]Selamat Datang di MyXL CLI[/]"
-    _print_centered_panel(banner_text, title="Banner", border_style=_c("border_primary"))
+    banner_text = f"[{_c('text_title')}]Selamat Datang di MyXL CLI v8.7.0[/]"
+    centered_text = Align.center(banner_text)
+    panel = Panel(
+        centered_text,
+        title="barbex_id",
+        title_align="center",
+        border_style=_c("border_primary"),
+        padding=(1, 4),
+        expand=True
+    )
+    console.print(panel)
 
 def show_main_menu(number, balance, balance_expired_at):
     clear_screen()
