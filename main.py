@@ -1,8 +1,11 @@
 from dotenv import load_dotenv
-
 load_dotenv() 
 
 import sys
+from datetime import datetime
+from rich.console import Console
+from rich.panel import Panel
+from rich.theme import Theme
 from app.menus.util import clear_screen, pause
 from app.client.engsel import *
 from app.service.auth import AuthInstance
@@ -11,99 +14,140 @@ from app.menus.account import show_account_menu
 from app.menus.package import fetch_my_packages, get_packages_by_family
 from app.menus.hot import show_hot_menu
 
+# Custom theme for Rich
+custom_theme = Theme({
+    "error": "bold red",
+    "success": "bold green",
+    "info": "bold yellow",
+    "menu": "bold cyan",
+    "account": "bold magenta",
+    "title": "bold yellow"
+})
+console = Console(theme=custom_theme)
+
 def show_main_menu(number, balance, balance_expired_at):
     clear_screen()
     phone_number = number
     remaining_balance = balance
     expired_at = balance_expired_at
     expired_at_dt = datetime.fromtimestamp(expired_at).strftime("%Y-%m-%d %H:%M:%S")
-    
-    print("--------------------------")
-    print("Informasi Akun")
-    print(f"Nomor: {phone_number}")
-    print(f"Pulsa: Rp {remaining_balance}")
-    print(f"Masa aktif: {expired_at_dt}")
-    print("--------------------------")
-    print("Menu:")
-    print("1. Login/Ganti akun")
-    print("2. Lihat Paket Saya")
-    print("3. Beli Paket 🔥 HOT 🔥")
-    print("4. Beli Paket Berdasarkan Family Code")
-    print("5. Beli Paket Berdasarkan Family Code (Enterprise)")
-    print("00. Bookmark Paket")
-    print("99. Tutup aplikasi")
-    print("--------------------------")
 
-show_menu = True
+    info_akun = (
+        f"[account]Nomor:[/account] {phone_number}\n"
+        f"[account]Pulsa:[/account] Rp {remaining_balance}\n"
+        f"[account]Masa aktif:[/account] {expired_at_dt}\n"
+    )
+    menu_text = (
+        "[menu]1.[/menu] Login/Ganti akun\n"
+        "[menu]2.[/menu] Lihat Paket Saya\n"
+        "[menu]3.[/menu] Beli Paket 🔥 HOT 🔥\n"
+        "[menu]4.[/menu] Beli Paket Berdasarkan Family Code\n"
+        "[menu]5.[/menu] Beli Paket Berdasarkan Family Code (Enterprise)\n"
+        "[menu]00.[/menu] Bookmark Paket\n"
+        "[menu]99.[/menu] Tutup aplikasi"
+    )
+    panel_content = (
+        f"[title]Informasi Akun[/title]\n{info_akun}\n"
+        f"[title]Menu Utama[/title]\n{menu_text}"
+    )
+    console.print(Panel(panel_content, title="me-cli Dashboard", border_style="cyan", expand=False))
+
+def pesan_error(msg):
+    console.print(f"[error]{msg}[/error]")
+
+def pesan_sukses(msg):
+    console.print(f"[success]{msg}[/success]")
+
+def pesan_info(msg):
+    console.print(f"[info]{msg}[/info]")
+
 def main():
-    
     while True:
         active_user = AuthInstance.get_active_user()
 
         # Logged in
         if active_user is not None:
-            balance = get_balance(AuthInstance.api_key, active_user["tokens"]["id_token"])
-            balance_remaining = balance.get("remaining")
-            balance_expired_at = balance.get("expired_at")
+            try:
+                balance = get_balance(AuthInstance.api_key, active_user["tokens"]["id_token"])
+                balance_remaining = balance.get("remaining")
+                balance_expired_at = balance.get("expired_at")
+            except Exception as e:
+                pesan_error(f"Gagal mengambil data saldo: {e}")
+                pause()
+                continue
 
             show_main_menu(active_user["number"], balance_remaining, balance_expired_at)
 
-            choice = input("Pilih menu: ")
+            choice = console.input("[menu]Pilih menu:[/menu] ").strip()
             if choice == "1":
                 selected_user_number = show_account_menu()
                 if selected_user_number:
                     AuthInstance.set_active_user(selected_user_number)
+                    pesan_sukses("Akun berhasil diganti.")
                 else:
-                    print("No user selected or failed to load user.")
+                    pesan_error("Tidak ada user yang dipilih atau gagal memuat user.")
                 continue
             elif choice == "2":
-                fetch_my_packages()
+                try:
+                    fetch_my_packages()
+                    pesan_sukses("Paket berhasil ditampilkan.")
+                except Exception as e:
+                    pesan_error(f"Gagal menampilkan paket: {e}")
                 continue
             elif choice == "3":
-                show_hot_menu()
+                try:
+                    show_hot_menu()
+                except Exception as e:
+                    pesan_error(f"Gagal menampilkan menu HOT: {e}")
             elif choice == "4":
-                family_code = input("Enter family code (or '99' to cancel): ")
+                family_code = console.input("[menu]Masukkan family code (atau '99' untuk batal):[/menu] ").strip()
                 if family_code == "99":
+                    pesan_info("Aksi dibatalkan.")
                     continue
-                get_packages_by_family(family_code)
+                try:
+                    get_packages_by_family(family_code)
+                    pesan_sukses("Paket berdasarkan family code berhasil ditampilkan.")
+                except Exception as e:
+                    pesan_error(f"Gagal menampilkan paket: {e}")
             elif choice == "5":
-                family_code = input("Enter family code (or '99' to cancel): ")
+                family_code = console.input("[menu]Masukkan family code (atau '99' untuk batal):[/menu] ").strip()
                 if family_code == "99":
+                    pesan_info("Aksi dibatalkan.")
                     continue
-                get_packages_by_family(family_code, is_enterprise=True)
+                try:
+                    get_packages_by_family(family_code, is_enterprise=True)
+                    pesan_sukses("Paket enterprise berhasil ditampilkan.")
+                except Exception as e:
+                    pesan_error(f"Gagal menampilkan paket enterprise: {e}")
             elif choice == "00":
-                show_bookmark_menu()
+                try:
+                    show_bookmark_menu()
+                    pesan_sukses("Menu bookmark berhasil ditampilkan.")
+                except Exception as e:
+                    pesan_error(f"Gagal menampilkan menu bookmark: {e}")
             elif choice == "99":
-                print("Exiting the application.")
+                pesan_info("Exiting the application.")
                 sys.exit(0)
             elif choice == "9":
                 # Playground
                 pass
-                # data = get_package(
-                #     AuthInstance.api_key,
-                #     active_user["tokens"],
-                #     "U0NfX8A08oQLUQuLplGhfT_FXQokJ9GFF9kAKRiV5trm6BfbRoxrsizKkWIVNxM0az6lroT92FYXnWmTXRXZOl1Meg",
-                #     ""
-                #     ""
-                #     )
-                # print(json.dumps(data, indent=2))
-                # pause()
             else:
-                print("Invalid choice. Please try again.")
+                pesan_error("Pilihan tidak valid. Silakan coba lagi.")
                 pause()
         else:
             # Not logged in
+            pesan_info("Silakan login terlebih dahulu.")
             selected_user_number = show_account_menu()
             if selected_user_number:
                 AuthInstance.set_active_user(selected_user_number)
+                pesan_sukses("Login berhasil.")
             else:
-                print("No user selected or failed to load user.")
+                pesan_error("Tidak ada user yang dipilih atau gagal memuat user.")
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\nExiting the application.")
+        pesan_info("Exiting the application.")
     except Exception as e:
-        print(f"An error occurred: {e}")
-        
+        pesan_error(f"Terjadi kesalahan: {e}")
