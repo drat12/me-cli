@@ -19,14 +19,17 @@ def show_main_menu(number, balance, balance_expired_at):
     clear_screen()
     phone_number = number
     remaining_balance = balance
-    expired_at = balance_expired_at
-    expired_at_dt = datetime.fromtimestamp(expired_at).strftime("%Y-%m-%d %H:%M:%S")
+    expired_at_dt = datetime.fromtimestamp(balance_expired_at).strftime("%Y-%m-%d %H:%M:%S")
 
+    # Panel 1: Informasi Akun
     info_akun = (
         f"[bold magenta]Nomor:[/bold magenta] {phone_number}\n"
         f"[bold magenta]Pulsa:[/bold magenta] Rp {remaining_balance}\n"
-        f"[bold magenta]Masa aktif:[/bold magenta] {expired_at_dt}\n"
+        f"[bold magenta]Masa aktif:[/bold magenta] {expired_at_dt}"
     )
+    console.print(Panel(info_akun, title="[bold yellow]Informasi Akun[/bold yellow]", border_style="cyan", expand=False))
+
+    # Panel 2: Menu Utama
     menu_text = (
         "[bold cyan]1.[/bold cyan] Login/Ganti akun\n"
         "[bold cyan]2.[/bold cyan] Lihat Paket Saya\n"
@@ -36,11 +39,8 @@ def show_main_menu(number, balance, balance_expired_at):
         "[bold cyan]00.[/bold cyan] Bookmark Paket\n"
         "[bold cyan]99.[/bold cyan] Tutup aplikasi"
     )
-    panel_content = (
-        f"[bold yellow underline]Informasi Akun[/bold yellow underline]\n{info_akun}\n"
-        f"[bold yellow underline]Menu Utama[/bold yellow underline]\n{menu_text}"
-    )
-    console.print(Panel(panel_content, title="me-cli Dashboard", border_style="cyan", expand=False))
+    console.print(Panel(menu_text, title="[bold yellow]Menu Utama[/bold yellow]", border_style="green", expand=False))
+
 
 def pesan_error(msg):
     console.print(f"[bold red]{msg}[/bold red]")
@@ -55,7 +55,6 @@ def main():
     while True:
         active_user = AuthInstance.get_active_user()
 
-        # Logged in
         if active_user is not None:
             try:
                 balance = get_balance(AuthInstance.api_key, active_user["tokens"]["id_token"])
@@ -119,13 +118,11 @@ def main():
                 pesan_info("Exiting the application.")
                 sys.exit(0)
             elif choice == "9":
-                # Playground
                 pass
             else:
                 pesan_error("Pilihan tidak valid. Silakan coba lagi.")
                 pause()
         else:
-            # Not logged in
             pesan_info("Silakan login terlebih dahulu.")
             selected_user_number = show_account_menu()
             if selected_user_number:
