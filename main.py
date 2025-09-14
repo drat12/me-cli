@@ -163,8 +163,8 @@ def show_main_menu(number, balance, balance_expired_at):
     info = Table.grid(padding=(0,2))
     info.add_column(justify="right", style=_c("text_sub"))
     info.add_column(style=_c("text_body"))
-    info.add_row("Nomor Anda", f"[{_c('text_value')}]{phone_number}[/]")
-    info.add_row("Sisa Pulsa", f"[{_c('text_money')}]Rp {remaining_balance:,}[/]")
+    info.add_row("Nomor", f"[{_c('text_value')}]{phone_number}[/]")
+    info.add_row("Pulsa", f"[{_c('text_money')}]Rp {remaining_balance:,}[/]")
     info.add_row("Masa Aktif", f"[{_c('text_date')}]{expired_at_dt}[/]")
     _print_centered_panel(info, title=f"[{_c('text_title')}]Informasi Akun[/]", border_style=_c("border_info"))
 
