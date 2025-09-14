@@ -143,9 +143,9 @@ def show_main_menu(number, balance, balance_expired_at):
     expired_at_dt = datetime.fromtimestamp(balance_expired_at).strftime("%Y-%m-%d %H:%M:%S")
 
     info_akun = (
-        f"[{_c('text_key')}]     Nomor:[/{_c('text_key')}] [{_c('text_value')}] {phone_number}[/{_c('text_value')}]\n"
-        f"[{_c('text_key')}]     Pulsa:[/{_c('text_key')}] [{_c('text_money')}] Rp {remaining_balance}[/{_c('text_money')}]\n"
-        f"[{_c('text_key')}]Masa aktif:[/{_c('text_key')}] [{_c('text_date')}] {expired_at_dt}[/{_c('text_date')}]"
+        f"[{_c('text_key')}]     Nomor[/{_c('text_key')}] [{_c('text_value')}] {phone_number}[/{_c('text_value')}]\n"
+        f"[{_c('text_key')}]     Pulsa[/{_c('text_key')}] [{_c('text_money')}] Rp {remaining_balance}[/{_c('text_money')}]\n"
+        f"[{_c('text_key')}]Masa aktif[/{_c('text_key')}] [{_c('text_date')}] {expired_at_dt}[/{_c('text_date')}]"
     )
     console.print(
         Panel(
@@ -165,10 +165,10 @@ def show_main_menu(number, balance, balance_expired_at):
         ("[bold cyan]1[/bold cyan]", "Login/Ganti akun"),
         ("[bold cyan]2[/bold cyan]", "Lihat Paket Saya"),
         ("[bold cyan]3[/bold cyan]", "Beli Paket 🔥 HOT 🔥"),
-        ("[bold cyan]4[/bold cyan]", "Beli Paket Berdasarkan Family Code"),
-        ("[bold cyan]5[/bold cyan]", "Beli Paket Berdasarkan Family Code (Enterprise)"),
-        ("[bold cyan]6[/bold cyan]", "Ganti Tema"),
+        ("[bold cyan]4[/bold cyan]", "Input Family Code"),
+        ("[bold cyan]5[/bold cyan]", Input Family Code (Enterprise)"),
         ("[bold cyan]00[/bold cyan]", "Bookmark Paket"),
+        ("[bold cyan]69[/bold cyan]", "Ganti Gaya"),
         ("[bold red]99[/bold red]", "Tutup aplikasi")
     ]
     for num, name in menu_items:
@@ -262,7 +262,7 @@ def main():
                     pesan_sukses("Paket enterprise berhasil ditampilkan.")
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan paket enterprise: {e}")
-            elif choice == "6":
+            elif choice == "69":
                 menu_ganti_theme()
                 continue
             elif choice == "00":
