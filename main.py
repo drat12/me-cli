@@ -154,7 +154,7 @@ def show_main_menu(number, balance, balance_expired_at):
             border_style=_c("border_info"),
             expand=True,
             padding=(0,2),
-            title_align="right"
+            title_align="center"
         )
     )
 
