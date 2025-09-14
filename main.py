@@ -150,12 +150,6 @@ def _print_centered_panel(renderable, title="", border_style=""):
 
 def show_banner():
     clear_screen()
-            title=f"[{_c('text_title')}]SELAMAT DATANG[/]",
-            subtitle="[dim]Custom by barbex_id[/]",
-            border_style=_c("border_primary"),
-            box=DOUBLE,
-            padding=(1, 2)
-        )
         console.print(Align.center(header))
         _print_gradient_title("Tembak Paket Internet Murah")
         console.print(Align.center(Rule(style=_c("border_primary"))))
