@@ -79,7 +79,7 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
 
     while True:
         menu = Table(show_header=False, box=MINIMAL_DOUBLE_HEAD, expand=True)
-        menu.add_column("Kode", justify="center", style=_c("text_number"), width=6)
+        menu.add_column("Kode", justify="right", style=_c("text_number"), width=6)
         menu.add_column("Aksi", style=_c("text_body"))
         menu.add_row("1", "Beli dengan Pulsa")
         menu.add_row("2", "Beli dengan E-Wallet")
