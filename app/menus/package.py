@@ -218,15 +218,18 @@ def fetch_my_packages():
     my_packages = []
 
     clear_screen()
-    console.rule(f"[{_c('text_title')}] Paket Saya [/]", style=_c("border_info"))
+    console.print(Panel("[bold]Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=False))
 
     table = Table(box=MINIMAL_DOUBLE_HEAD, expand=True)
     table.add_column("No", justify="center", style=_c("text_number"), width=6)
     table.add_column("Nama Paket", style=_c("text_body"))
     table.add_column("Family Code", style=_c("text_key"))
+    table.add_column("Group Code", style=_c("text_key"))
+    table.add_column("Kode Paket", style=_c("text_key"))
 
     for idx, quota in enumerate(quotas, 1):
         quota_code = quota["quota_code"]
+        group_code = quota["group_code"]
         name = quota["name"]
         family_code = "N/A"
 
@@ -234,7 +237,7 @@ def fetch_my_packages():
         if package_details:
             family_code = package_details["package_family"]["package_family_code"]
 
-        table.add_row(str(idx), name, family_code)
+        table.add_row(str(idx), name, family_code, group_code, quota_code)
         my_packages.append({
             "number": idx,
             "quota_code": quota_code,
@@ -258,4 +261,5 @@ def fetch_my_packages():
         return None
 
     pause()
+
 
