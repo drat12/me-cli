@@ -231,11 +231,11 @@ def fetch_my_packages():
             family_code = package_details["package_family"]["package_family_code"]
 
         isi = f"""
-[bold]{name}[/bold]
-[dim]Nomor:[/] {idx}
-[dim]Family Code:[/] {family_code}
-[dim]Group Code:[/] {group_code}
-[dim]Quota Code:[/] {quota_code}
+[bold { _c("text_body") }]{name}[/bold]
+[{_c("text_sub")}]Nomor:[/] [{_c("text_number")}]{idx}[/{_c("text_number")}]
+[{_c("text_sub")}]Family Code:[/] [{_c("text_key")}]{family_code}[/{_c("text_key")}]
+[{_c("text_sub")}]Group Code:[/] [{_c("text_key")}]{group_code}[/{_c("text_key")}]
+[{_c("text_sub")}]Quota Code:[/] [{_c("text_key")}]{quota_code}[/{_c("text_key")}]
 """
         console.print(Panel(isi.strip(), border_style=_c("border_primary"), padding=(1, 2), expand=True))
 
