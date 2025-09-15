@@ -190,6 +190,7 @@ def get_packages_by_family(family_code: str, is_enterprise: bool = False):
         )
         if is_done:
             return None
+# ===================================
 def fetch_my_packages():
     api_key = AuthInstance.api_key
     tokens = AuthInstance.get_active_tokens()
@@ -218,7 +219,7 @@ def fetch_my_packages():
     table = Table(title=f"[{_c('text_title')}]Paket Saya[/]", box=MINIMAL_DOUBLE_HEAD, expand=True)
     table.add_column("No", justify="center", style=_c("text_number"), width=6)
     table.add_column("Nama Paket", style=_c("text_body"))
-    table.add_column("Quota Code", style=_c("text_key"))
+    table.add_column("Family Code", style=_c("text_key"))
     table.add_column("Group Code", style=_c("text_key"))
 
     for idx, quota in enumerate(quotas, 1):
@@ -231,7 +232,7 @@ def fetch_my_packages():
         if package_details:
             family_code = package_details["package_family"]["package_family_code"]
 
-        table.add_row(str(idx), name, quota_code, group_code)
+        table.add_row(str(idx), name, family_code, group_code)
         my_packages.append({
             "number": idx,
             "quota_code": quota_code,
