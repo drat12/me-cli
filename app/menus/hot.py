@@ -1,11 +1,12 @@
+import requests
+from rich.table import Table
+from rich.panel import Panel
+
 from app.client.engsel import get_family
 from app.menus.package import show_package_details
 from app.service.auth import AuthInstance
 from app.menus.util import clear_screen, pause
 from app.theme import _c, console
-from rich.table import Table
-from rich.panel import Panel
-import requests
 
 def show_hot_menu():
     api_key = AuthInstance.api_key
@@ -21,8 +22,8 @@ def show_hot_menu():
             response = requests.get(url, timeout=30)
             response.raise_for_status()
             hot_packages = response.json()
-        except Exception:
-            console.print("Gagal mengambil data hot package.", style=_c("text_err"))
+        except Exception as e:
+            console.print(f"Gagal mengambil data hot package: {e}", style=_c("text_err"))
             pause()
             return None
 
@@ -31,6 +32,7 @@ def show_hot_menu():
             pause()
             return None
 
+        # Tampilkan daftar paket HOT
         table = Table(box="SIMPLE", expand=True)
         table.add_column("No", justify="right", style=_c("text_number"), width=6)
         table.add_column("Family", style=_c("text_sub"))
@@ -59,17 +61,20 @@ def show_hot_menu():
                 pause()
                 continue
             
-            package_variants = family_data["package_variants"]
+            package_variants = family_data.get("package_variants", [])
             option_code = None
             for variant in package_variants:
                 if variant["name"] == selected_bm["variant_name"]:
-                    for option in variant["package_options"]:
+                    for option in variant.get("package_options", []):
                         if option["order"] == selected_bm["order"]:
                             option_code = option["package_option_code"]
                             break
             
             if option_code:
                 show_package_details(api_key, tokens, option_code, is_enterprise)
+            else:
+                console.print("Paket tidak ditemukan dalam data family.", style=_c("text_err"))
+                pause()
         else:
             console.print("Input tidak valid. Silakan coba lagi.", style=_c("text_err"))
             pause()
