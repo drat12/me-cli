@@ -21,13 +21,18 @@ def show_hot_menu():
         try:
             response = requests.get(url, timeout=30)
             response.raise_for_status()
-            hot_packages = response.json()
+            try:
+                hot_packages = response.json()
+            except Exception:
+                console.print("Data HOT tidak dalam format JSON.", style=_c("text_err"))
+                pause()
+                return None
         except Exception as e:
             console.print(f"Gagal mengambil data hot package: {e}", style=_c("text_err"))
             pause()
             return None
 
-        if not hot_packages:
+        if not isinstance(hot_packages, list) or not hot_packages:
             console.print("Tidak ada paket HOT tersedia saat ini.", style=_c("text_warn"))
             pause()
             return None
@@ -40,7 +45,7 @@ def show_hot_menu():
         table.add_column("Paket", style=_c("text_value"))
 
         for idx, p in enumerate(hot_packages):
-            table.add_row(str(idx + 1), p["family_name"], p["variant_name"], p["option_name"])
+            table.add_row(str(idx + 1), p.get("family_name", "-"), p.get("variant_name", "-"), p.get("option_name", "-"))
 
         console.print(Panel(table, title="", border_style=_c("border_info"), padding=(1, 2), expand=True))
         console.print(f"[{_c('text_sub')}]00 untuk kembali ke menu utama[/{_c('text_sub')}]")
@@ -52,9 +57,16 @@ def show_hot_menu():
 
         if choice.isdigit() and 1 <= int(choice) <= len(hot_packages):
             selected_bm = hot_packages[int(choice) - 1]
-            family_code = selected_bm["family_code"]
-            is_enterprise = selected_bm["is_enterprise"]
-            
+            family_code = selected_bm.get("family_code")
+            is_enterprise = selected_bm.get("is_enterprise", False)
+            variant_name = selected_bm.get("variant_name")
+            order = selected_bm.get("order")
+
+            if not family_code or not variant_name or order is None:
+                console.print("Data paket tidak lengkap.", style=_c("text_err"))
+                pause()
+                continue
+
             family_data = get_family(api_key, tokens, family_code, is_enterprise)
             if not family_data:
                 console.print("Gagal mengambil data family.", style=_c("text_err"))
@@ -64,10 +76,10 @@ def show_hot_menu():
             package_variants = family_data.get("package_variants", [])
             option_code = None
             for variant in package_variants:
-                if variant["name"] == selected_bm["variant_name"]:
+                if variant.get("name") == variant_name:
                     for option in variant.get("package_options", []):
-                        if option["order"] == selected_bm["order"]:
-                            option_code = option["package_option_code"]
+                        if option.get("order") == order:
+                            option_code = option.get("package_option_code")
                             break
             
             if option_code:
