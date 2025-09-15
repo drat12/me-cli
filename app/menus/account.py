@@ -6,6 +6,7 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.box import ROUNDED
 
+# ========== Utility Pesan ==========
 def pesan_error(msg):
     console.print(f"[{_c('text_err')}]{msg}[/{_c('text_err')}]")
 
@@ -15,6 +16,7 @@ def pesan_sukses(msg):
 def pesan_info(msg):
     console.print(f"[{_c('text_warn')}]{msg}[/{_c('text_warn')}]")
 
+# ========== Login Prompt ==========
 def login_prompt(api_key: str):
     clear_screen()
     console.print(Panel("Login ke MyXL", title="[bold]Login[/]", border_style=_c("border_primary")))
@@ -53,6 +55,7 @@ def login_prompt(api_key: str):
         pause()
         return None, None
 
+# ========== Menu Akun ==========
 def show_account_menu():
     clear_screen()
     AuthInstance.load_tokens()
@@ -79,8 +82,8 @@ def show_account_menu():
             add_user = False
             continue
 
-        # Tabel akun tersimpan
-        akun_table = Table(title="[bold]Akun Tersimpan[/]", box=ROUNDED, expand=True)
+        # Tabel akun tersimpan (tanpa judul internal)
+        akun_table = Table(box=ROUNDED, expand=True)
         akun_table.add_column("No", justify="center", style=_c("text_number"))
         akun_table.add_column("Nomor", style=_c("text_body"))
 
@@ -92,8 +95,13 @@ def show_account_menu():
                 marker = f"[{_c('text_sub')}] (Aktif)[/{_c('text_sub')}]" if is_active else ""
                 akun_table.add_row(str(idx + 1), f"{user['number']}{marker}")
 
-        # Panel akun
-        akun_panel = Panel(akun_table, title=f"[{_c('text_title')}]Akun Tersimpan[/]", border_style=_c("border_info"), padding=(0, 2), expand=True)
+        akun_panel = Panel(
+            akun_table,
+            title=f"[{_c('text_title')}]Akun Tersimpan[/]",
+            border_style=_c("border_info"),
+            padding=(0, 2),
+            expand=True
+        )
         console.print(akun_panel)
 
         # Tabel command
@@ -105,7 +113,13 @@ def show_account_menu():
         cmd_table.add_row("99", "Hapus Akun Aktif")
         cmd_table.add_row("-", "Masukkan nomor akun untuk berganti")
 
-        cmd_panel = Panel(cmd_table, title=f"[{_c('text_title')}]Command[/]", border_style=_c("border_primary"), padding=(0, 2), expand=True)
+        cmd_panel = Panel(
+            cmd_table,
+            title=f"[{_c('text_title')}]Command[/]",
+            border_style=_c("border_primary"),
+            padding=(0, 2),
+            expand=True
+        )
         console.print(cmd_panel)
 
         input_str = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
