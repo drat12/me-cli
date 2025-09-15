@@ -218,14 +218,7 @@ def fetch_my_packages():
     my_packages = []
 
     clear_screen()
-    console.print(Panel("[bold]Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=False))
-
-    table = Table(box=MINIMAL_DOUBLE_HEAD, expand=True)
-    table.add_column("No", justify="center", style=_c("text_number"), width=6)
-    table.add_column("Nama Paket", style=_c("text_body"))
-    table.add_column("Family Code", style=_c("text_key"))
-    table.add_column("Group Code", style=_c("text_key"))
-    table.add_column("Kode Paket", style=_c("text_key"))
+    console.print(Panel.fit("[bold]Paket Saya[/bold]", style=_c("border_info")))
 
     for idx, quota in enumerate(quotas, 1):
         quota_code = quota["quota_code"]
@@ -237,13 +230,19 @@ def fetch_my_packages():
         if package_details:
             family_code = package_details["package_family"]["package_family_code"]
 
-        table.add_row(str(idx), name, family_code, group_code, quota_code)
+        isi = f"""
+[bold]{name}[/bold]
+[dim]Nomor:[/] {idx}
+[dim]Family Code:[/] {family_code}
+[dim]Group Code:[/] {group_code}
+[dim]Kode Paket:[/] {quota_code}
+"""
+        console.print(Panel(isi.strip(), border_style=_c("border_primary"), padding=(1, 2), expand=True))
         my_packages.append({
             "number": idx,
             "quota_code": quota_code,
         })
 
-    console.print(table)
     console.print(f"[{_c('text_sub')}]Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.[/{_c('text_sub')}]")
     choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
 
@@ -261,5 +260,6 @@ def fetch_my_packages():
         return None
 
     pause()
+
 
 
