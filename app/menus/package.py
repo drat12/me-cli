@@ -218,8 +218,10 @@ def fetch_my_packages():
     my_packages = []
 
     clear_screen()
-    console.print(Panel("[bold]Daftar Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=True))
+    # Judul di tengah dalam kotak penuh layar
+    console.print(Panel("Daftar Paket Saya", style=_c("text_title"), border_style=_c("border_info"), padding=(0, 2), expand=True))
 
+    # Tampilkan setiap paket dalam panel individual
     for idx, quota in enumerate(quotas, 1):
         quota_code = quota["quota_code"]
         group_code = quota["group_code"]
@@ -230,20 +232,22 @@ def fetch_my_packages():
         if package_details:
             family_code = package_details["package_family"]["package_family_code"]
 
-        isi = f"""
-[bold { _c("text_body") }]{name}[/bold]
-[{_c("text_sub")}]Nomor:[/] [{_c("text_number")}]{idx}[/{_c("text_number")}]
-[{_c("text_sub")}]Family Code:[/] [{_c("text_key")}]{family_code}[/{_c("text_key")}]
-[{_c("text_sub")}]Group Code:[/] [{_c("text_key")}]{group_code}[/{_c("text_key")}]
-[{_c("text_sub")}]Quota Code:[/] [{_c("text_key")}]{quota_code}[/{_c("text_key")}]
-"""
-        console.print(Panel(isi.strip(), border_style=_c("border_primary"), padding=(1, 2), expand=True))
+        isi = (
+            f"[bold { _c('text_body') }]{name}[/bold]\n"
+            f"[{_c('text_sub')}]Nomor:[/] [{_c('text_number')}]{idx}[/{_c('text_number')}]\n"
+            f"[{_c('text_sub')}]Family Code:[/] [{_c('text_key')}]{family_code}[/{_c('text_key')}]\n"
+            f"[{_c('text_sub')}]Group Code:[/] [{_c('text_key')}]{group_code}[/{_c('text_key')}]\n"
+            f"[{_c('text_sub')}]Quota Code:[/] [{_c('text_key')}]{quota_code}[/{_c('text_key')}]"
+        )
+
+        console.print(Panel(isi, border_style=_c("border_primary"), padding=(1, 2), expand=True))
 
         my_packages.append({
             "number": idx,
             "quota_code": quota_code,
         })
 
+    # Input pilihan
     console.print(f"[{_c('text_sub')}]Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.[/{_c('text_sub')}]")
     choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
 
