@@ -1,5 +1,3 @@
-# main.py
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -90,8 +88,8 @@ def menu_ganti_theme():
     theme_names = list(THEMES.keys())
     active_theme = get_active_theme_name()
 
-    table = Table(title=f"[{_c('text_title')}]Daftar Tema[/]", box=ROUNDED, expand=True)
-    table.add_column("No", justify="center", style=_c("text_number"), width=6)
+    table = Table(box=ROUNDED, expand=True)
+    table.add_column("", justify="right", style=_c("text_number"), width=6)
     table.add_column("Nama Tema", style=_c("text_body"))
     table.add_column("Preview", style=_c("text_body"))
 
