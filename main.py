@@ -1,8 +1,15 @@
+# main.py
+
 from dotenv import load_dotenv
 load_dotenv()
 
 import sys
 from datetime import datetime
+from rich.panel import Panel
+from rich.table import Table
+from rich.box import ROUNDED
+from rich.align import Align
+
 from app.menus.util import clear_screen, pause
 from app.client.engsel import get_balance
 from app.service.auth import AuthInstance
@@ -10,13 +17,20 @@ from app.menus.bookmark import show_bookmark_menu
 from app.menus.account import show_account_menu
 from app.menus.package import fetch_my_packages, get_packages_by_family
 from app.menus.hot import show_hot_menu
-from app.theme import _c, console, set_theme
+from app.theme import _c, console, set_theme, get_active_theme_name, THEMES
 
-from rich.panel import Panel
-from rich.table import Table
-from rich.box import ROUNDED
+# ========== Utility Pesan ==========
 
-# ========== Tampilan Panel ==========
+def pesan_error(msg):
+    console.print(f"[{_c('text_err')}]{msg}[/{_c('text_err')}]")
+
+def pesan_sukses(msg):
+    console.print(f"[{_c('text_ok')}]{msg}[/{_c('text_ok')}]")
+
+def pesan_info(msg):
+    console.print(f"[{_c('text_warn')}]{msg}[/{_c('text_warn')}]")
+
+# ========== Panel & Banner ==========
 
 def _print_centered_panel(renderable, title="", border_style=""):
     panel = Panel(
@@ -28,9 +42,6 @@ def _print_centered_panel(renderable, title="", border_style=""):
         title_align="center"
     )
     console.print(panel)
-
-from rich.align import Align
-from app.theme import _c, console
 
 def show_banner():
     clear_screen()
@@ -72,13 +83,13 @@ def show_main_menu(number, balance, balance_expired_at):
     menu.add_row("[bold]99[/]", f"[{_c('text_err')}]Tutup aplikasi[/]")
     _print_centered_panel(menu, title=f"[{_c('text_title')}]Menu[/]", border_style=_c("border_primary"))
 
-# ========== Tema Preset ==========
+# ========== Menu Ganti Tema ==========
 
 def menu_ganti_theme():
     clear_screen()
-    from app.theme import THEMES, get_active_theme_name
-
     theme_names = list(THEMES.keys())
+    active_theme = get_active_theme_name()
+
     table = Table(title=f"[{_c('text_title')}]Daftar Tema[/]", box=ROUNDED, expand=True)
     table.add_column("No", justify="center", style=_c("text_number"), width=6)
     table.add_column("Nama Tema", style=_c("text_body"))
@@ -93,7 +104,7 @@ def menu_ganti_theme():
             f"[{preset['border_error']}]■[/] "
             f"[{preset['text_title']}]A[/]"
         )
-        aktif = " (aktif)" if name == get_active_theme_name() else ""
+        aktif = f"[{_c('text_sub')}] (aktif)[/{_c('text_sub')}]" if name == active_theme else ""
         table.add_row(str(idx), f"{name}{aktif}", preview)
 
     panel = Panel(table, title=f"[{_c('text_title')}]Pilih Tema[/]", border_style=_c("border_info"), padding=(0, 2), expand=True)
@@ -106,34 +117,22 @@ def menu_ganti_theme():
             pesan_error("Pilihan tema tidak valid.")
         else:
             nama_tema = theme_names[idx]
-            from app.theme import set_theme
             set_theme(nama_tema)
             pesan_sukses(f"Tema berhasil diganti ke '{nama_tema}'.")
     except Exception:
         pesan_error("Input tidak valid.")
     pause()
 
-# ========== Pesan Utility ==========
-
-def pesan_error(msg):
-    console.print(f"[{_c('text_err')}]{msg}[/{_c('text_err')}]")
-
-def pesan_sukses(msg):
-    console.print(f"[{_c('text_ok')}]{msg}[/{_c('text_ok')}]")
-
-def pesan_info(msg):
-    console.print(f"[{_c('text_warn')}]{msg}[/{_c('text_warn')}]")
-
 # ========== Main Loop ==========
 
 def main():
     while True:
         active_user = AuthInstance.get_active_user()
-        if active_user is not None:
+        if active_user:
             try:
                 balance = get_balance(AuthInstance.api_key, active_user["tokens"]["id_token"])
-                balance_remaining = balance.get("remaining")
-                balance_expired_at = balance.get("expired_at")
+                balance_remaining = balance.get("remaining", 0)
+                balance_expired_at = balance.get("expired_at", 0)
             except Exception as e:
                 pesan_error(f"Gagal mengambil data saldo: {e}")
                 pause()
@@ -152,7 +151,6 @@ def main():
             elif choice == "2":
                 try:
                     fetch_my_packages()
-                    pesan_sukses("Paket berhasil ditampilkan.")
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan paket: {e}")
             elif choice == "3":
@@ -162,34 +160,31 @@ def main():
                     pesan_error(f"Gagal menampilkan menu HOT: {e}")
             elif choice == "4":
                 family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (atau '99' untuk batal):[/{_c('text_sub')}] ").strip()
-                if family_code == "99":
+                if family_code != "99":
+                    try:
+                        get_packages_by_family(family_code)
+                    except Exception as e:
+                        pesan_error(f"Gagal menampilkan paket: {e}")
+                else:
                     pesan_info("Aksi dibatalkan.")
-                    continue
-                try:
-                    get_packages_by_family(family_code)
-                    pesan_sukses("Paket berdasarkan family code berhasil ditampilkan.")
-                except Exception as e:
-                    pesan_error(f"Gagal menampilkan paket: {e}")
             elif choice == "5":
-                family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (atau '99' untuk batal):[/{_c('text_sub')}] ").strip()
-                if family_code == "99":
+                family_code = console.input(f"[{_c('text_sub')}]Masukkan family code (Enterprise):[/{_c('text_sub')}] ").strip()
+                if family_code != "99":
+                    try:
+                        get_packages_by_family(family_code, is_enterprise=True)
+                    except Exception as e:
+                        pesan_error(f"Gagal menampilkan paket enterprise: {e}")
+                else:
                     pesan_info("Aksi dibatalkan.")
-                    continue
-                try:
-                    get_packages_by_family(family_code, is_enterprise=True)
-                    pesan_sukses("Paket enterprise berhasil ditampilkan.")
-                except Exception as e:
-                    pesan_error(f"Gagal menampilkan paket enterprise: {e}")
-            elif choice == "69":
-                menu_ganti_theme()
             elif choice == "00":
                 try:
                     show_bookmark_menu()
-                    pesan_sukses("Menu bookmark berhasil ditampilkan.")
                 except Exception as e:
                     pesan_error(f"Gagal menampilkan menu bookmark: {e}")
+            elif choice == "69":
+                menu_ganti_theme()
             elif choice == "99":
-                pesan_info("Exiting the application.")
+                pesan_info("Keluar dari aplikasi.")
                 sys.exit(0)
             else:
                 pesan_error("Pilihan tidak valid. Silakan coba lagi.")
@@ -202,13 +197,13 @@ def main():
                 pesan_sukses("Login berhasil.")
             else:
                 pesan_error("Tidak ada user yang dipilih atau gagal memuat user.")
+                pause()
 
 # ========== Entry Point ==========
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        pesan_info("Exiting the application.")
+        pesan_info("Keluar dari aplikasi.")
     except Exception as e:
         pesan_error(f"Terjadi kesalahan: {e}")
-
