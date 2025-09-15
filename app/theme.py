@@ -141,6 +141,9 @@ def set_theme(name: str):
         _save_theme_name(name)
         return True
     return False
+# ======= aktive Theme =========
+def get_active_theme_name():
+    return _theme_name
 
 # ======= Fungsi Ambil Warna Berdasarkan Kunci =======
 def _c(key: str) -> str:
