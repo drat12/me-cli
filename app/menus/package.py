@@ -8,16 +8,12 @@ from app.service.bookmark import BookmarkInstance
 from app.client.purchase import (
     show_multipayment, show_qris_payment, settlement_bounty
 )
-from app.menus.util import clear_screen, pause, display_html
+from app.menus.util import clear_screen, pause, display_html, pesan_error, pesan_sukses, pesan_info
 from app.theme import _c, console
 from rich.panel import Panel
 from rich.table import Table
 from rich.box import MINIMAL_DOUBLE_HEAD
-
-# ========== Utility ==========
-def pesan_error(msg): console.print(f"[{_c('text_err')}]{msg}[/{_c('text_err')}]")
-def pesan_sukses(msg): console.print(f"[{_c('text_ok')}]{msg}[/{_c('text_ok')}]")
-def pesan_info(msg): console.print(f"[{_c('text_warn')}]{msg}[/{_c('text_warn')}]")
+from rich.align import Align
 
 # ========== Detail Paket ==========
 def show_package_details(api_key, tokens, package_option_code, is_enterprise, option_order=-1):
@@ -39,6 +35,8 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
     ts_to_sign = package["timestamp"]
     payment_for = package["package_family"]["payment_for"]
     detail = display_html(package["package_option"]["tnc"])
+
+    console.print(Panel(f"[{_c('text_title')}]📦 {title}[/]", border_style=_c("border_primary"), padding=(1, 4), expand=True))
 
     info = Table.grid(padding=(0, 2))
     info.add_column(justify="right", style=_c("text_sub"))
@@ -89,7 +87,7 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
         if option_order != -1:
             menu.add_row("0", f"[{_c('text_sub')}]Tambah ke Bookmark[/]")
         menu.add_row("00", f"[{_c('text_err')}]Kembali ke daftar paket[/]")
-        console.print(Panel(menu, title="", border_style=_c("border_primary"), padding=(0, 0), expand=True))
+        console.print(Panel(menu, title=f"[{_c('text_title')}]Aksi Pembelian[/]", border_style=_c("border_primary"), padding=(0, 0), expand=True))
 
         choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
         if choice == "00":
@@ -168,7 +166,8 @@ def get_packages_by_family(family_code: str, is_enterprise: bool = False):
                 table.add_row(str(option_number), variant_name, option_name, f"Rp {price:,}")
                 option_number += 1
 
-        console.print(Panel(table, title="", border_style=_c("border_info"), padding=(1, 0), expand=True))
+        panel = Panel(table, border_style=_c("border_info"), padding=(1, 0), expand=True)
+        console.print(panel)
         console.print(f"[{_c('text_sub')}]00 untuk kembali ke menu utama[/{_c('text_sub')}]")
         choice = console.input(f"[{_c('text_sub')}]Pilih paket (nomor):[/{_c('text_sub')}] ").strip()
 
@@ -190,12 +189,13 @@ def get_packages_by_family(family_code: str, is_enterprise: bool = False):
         )
         if is_done:
             return None
-# ===================================
+
+# ========== Daftar Paket Aktif Saya ==========
 def fetch_my_packages():
     api_key = AuthInstance.api_key
     tokens = AuthInstance.get_active_tokens()
     if not tokens:
-        console.print("Token pengguna tidak ditemukan.", style=_c("text_err"))
+        pesan_error("Token pengguna tidak ditemukan.")
         pause()
         return None
 
@@ -210,7 +210,7 @@ def fetch_my_packages():
     console.print("Mengambil daftar paket aktif...", style=_c("text_sub"))
     res = send_api_request(api_key, path, payload, id_token, "POST")
     if res.get("status") != "SUCCESS":
-        console.print("Gagal mengambil paket.", style=_c("text_err"))
+        pesan_error("Gagal mengambil paket.")
         pause()
         return None
 
@@ -245,15 +245,15 @@ def fetch_my_packages():
             "quota_code": quota_code,
         })
 
-    console.print("Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.", style=_c("text_sub"))
-    choice = console.input("Pilihan: ").strip()
+    console.print(f"[{_c('text_sub')}]Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.[/{_c('text_sub')}]")
+    choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
 
     if choice == "00":
         return None
 
     selected_pkg = next((pkg for pkg in my_packages if str(pkg["number"]) == choice), None)
     if not selected_pkg:
-        console.print("Paket tidak ditemukan. Silakan coba lagi.", style=_c("text_err"))
+        pesan_error("Paket tidak ditemukan. Silakan coba lagi.")
         pause()
         return None
 
