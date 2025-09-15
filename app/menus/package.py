@@ -1,10 +1,13 @@
-import sys
 import json
-
 from app.service.auth import AuthInstance
-from app.client.engsel import get_family, get_package, get_addons, send_api_request, purchase_package
+from app.client.engsel import (
+    get_family, get_package, get_addons,
+    send_api_request, purchase_package
+)
 from app.service.bookmark import BookmarkInstance
-from app.client.purchase import show_multipayment, show_qris_payment, settlement_bounty
+from app.client.purchase import (
+    show_multipayment, show_qris_payment, settlement_bounty
+)
 from app.menus.util import clear_screen, pause, display_html
 from app.theme import _c, console
 from rich.panel import Panel
@@ -45,7 +48,6 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
     info.add_row("Masa Aktif", f"[{_c('text_date')}]{validity}[/]")
     console.print(Panel(info, title=f"[{_c('text_title')}]Detail Paket[/]", border_style=_c("border_info"), padding=(1, 0), expand=True))
 
-    # Benefits
     benefits = package["package_option"].get("benefits", [])
     if benefits:
         benefit_table = Table(box=MINIMAL_DOUBLE_HEAD, expand=True)
@@ -68,16 +70,13 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
             benefit_table.add_row(name, value)
         console.print(Panel(benefit_table, title=f"[{_c('text_title')}]Benefit Paket[/]", border_style=_c("border_success"), padding=(1, 0), expand=True))
 
-    # Addons
     addons = get_addons(api_key, tokens, package_option_code)
     if addons:
         addon_text = json.dumps(addons, indent=2)
         console.print(Panel(addon_text, title=f"[{_c('text_title')}]Addons[/]", border_style=_c("border_info"), padding=(1, 2), expand=True))
 
-    # SnK
     console.print(Panel(detail, title=f"[{_c('text_title')}]Syarat & Ketentuan[/]", border_style=_c("border_warning"), padding=(1, 2), expand=True))
 
-    # Menu
     while True:
         menu = Table(show_header=False, box=MINIMAL_DOUBLE_HEAD, expand=True)
         menu.add_column("Kode", justify="center", style=_c("text_number"), width=6)
@@ -191,3 +190,4 @@ def get_packages_by_family(family_code: str, is_enterprise: bool = False):
         )
         if is_done:
             return None
+
