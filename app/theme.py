@@ -89,6 +89,26 @@ THEMES = {
         "gradient_start": "#34D399",
         "gradient_end": "#A7F3D0",
     },
+    "elegant_glass": {
+        "border_primary": "#64748B",      # Slate
+        "border_info": "#60A5FA",         # Blue-400
+        "border_success": "#10B981",      # Emerald
+        "border_warning": "#FBBF24",      # Amber
+        "border_error": "#EF4444",        # Red
+        "text_title": "bold #F8FAFC",     # Light
+        "text_sub": "bold #60A5FA",       # Blue
+        "text_ok": "bold #10B981",        # Emerald
+        "text_warn": "bold #FBBF24",      # Amber
+        "text_err": "bold #EF4444",       # Red
+        "text_body": "#CBD5E1",           # Slate-300
+        "text_key": "#94A3B8",            # Slate-400
+        "text_value": "bold #F1F5F9",     # Slate-50
+        "text_money": "bold #22C55E",     # Green
+        "text_date": "bold #FACC15",      # Yellow
+        "text_number": "#60A5FA",         # Blue
+        "gradient_start": "#60A5FA",
+        "gradient_end": "#94A3B8",
+    },
 }
 
 # ======= Fungsi Load & Save Tema =======
