@@ -17,7 +17,6 @@ def show_hot_menu():
     while in_hot_menu:
         clear_screen()
 
-        # Gunakan Text() untuk menghindari error markup
         title_text = Text("🔥 Paket HOT 🔥", style=_c("text_title"))
         console.print(Panel(title_text, title="Rekomendasi Paket", border_style=_c("border_primary"), padding=(1, 4), expand=True))
 
@@ -25,17 +24,11 @@ def show_hot_menu():
         try:
             response = requests.get(url, timeout=30)
             response.raise_for_status()
-        except Exception as e:
-            console.print(Text(f"Gagal mengambil data hot package: {e}", style=_c("text_err")))
-            pause()
-            return None
-
-        try:
             hot_packages = response.json()
             if not isinstance(hot_packages, list):
-                raise ValueError("Format JSON tidak sesuai (harus list).")
+                raise ValueError("Format JSON tidak sesuai.")
         except Exception as e:
-            console.print(Text(f"Data HOT tidak valid: {e}", style=_c("text_err")))
+            console.print(Text(f"Gagal mengambil data hot package: {e}", style=_c("text_err")))
             pause()
             return None
 
@@ -44,7 +37,6 @@ def show_hot_menu():
             pause()
             return None
 
-        # Tampilkan daftar paket HOT
         table = Table(box="SIMPLE", expand=True)
         table.add_column("No", justify="right", style=_c("text_number"), width=6)
         table.add_column("Family", style=_c("text_sub"))
@@ -60,7 +52,7 @@ def show_hot_menu():
             )
 
         console.print(Panel(table, border_style=_c("border_info"), padding=(1, 2), expand=True))
-        console.print(Text("00 untuk kembali ke menu utama", style=_c("text_sub")))
+        console.print(Text("00. Kembali ke menu utama", style=_c("text_sub")))
         choice = console.input(f"[{_c('text_sub')}]Pilih paket (nomor):[/{_c('text_sub')}] ").strip()
 
         if choice == "00":
@@ -95,6 +87,7 @@ def show_hot_menu():
                             break
 
             if option_code:
+                console.print(Text(f"Kode Paket: {option_code}", style=_c("text_sub")))
                 show_package_details(api_key, tokens, option_code, is_enterprise)
             else:
                 console.print(Text("Paket tidak ditemukan dalam data family.", style=_c("text_err")))
