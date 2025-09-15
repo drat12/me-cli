@@ -195,7 +195,7 @@ def fetch_my_packages():
     api_key = AuthInstance.api_key
     tokens = AuthInstance.get_active_tokens()
     if not tokens:
-        pesan_error("Token pengguna tidak ditemukan.")
+        console.print(f"[{_c('text_err')}]Token pengguna tidak ditemukan.[/{_c('text_err')}]")
         pause()
         return None
 
@@ -210,7 +210,7 @@ def fetch_my_packages():
     console.print(f"[{_c('text_sub')}]Mengambil daftar paket aktif...[/{_c('text_sub')}]")
     res = send_api_request(api_key, path, payload, id_token, "POST")
     if res.get("status") != "SUCCESS":
-        pesan_error("Gagal mengambil paket.")
+        console.print(f"[{_c('text_err')}]Gagal mengambil paket.[/{_c('text_err')}]")
         pause()
         return None
 
@@ -218,8 +218,10 @@ def fetch_my_packages():
     my_packages = []
 
     clear_screen()
-    console.print(Panel.fit("[bold]Paket Saya[/bold]", style=_c("border_info")))
+    # Judul di tengah dalam box penuh layar
+    console.print(Panel("[bold]Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=True))
 
+    # Tampilkan setiap paket dalam box individual
     for idx, quota in enumerate(quotas, 1):
         quota_code = quota["quota_code"]
         group_code = quota["group_code"]
@@ -238,11 +240,13 @@ def fetch_my_packages():
 [dim]Kode Paket:[/] {quota_code}
 """
         console.print(Panel(isi.strip(), border_style=_c("border_primary"), padding=(1, 2), expand=True))
+
         my_packages.append({
             "number": idx,
             "quota_code": quota_code,
         })
 
+    # Input pilihan
     console.print(f"[{_c('text_sub')}]Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.[/{_c('text_sub')}]")
     choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
 
@@ -251,7 +255,7 @@ def fetch_my_packages():
 
     selected_pkg = next((pkg for pkg in my_packages if str(pkg["number"]) == choice), None)
     if not selected_pkg:
-        pesan_error("Paket tidak ditemukan. Silakan coba lagi.")
+        console.print(f"[{_c('text_err')}]Paket tidak ditemukan. Silakan coba lagi.[/{_c('text_err')}]")
         pause()
         return None
 
@@ -260,6 +264,3 @@ def fetch_my_packages():
         return None
 
     pause()
-
-
-
