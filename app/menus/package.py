@@ -146,10 +146,10 @@ def get_packages_by_family(family_code: str, is_enterprise: bool = False):
     while True:
         clear_screen()
         table = Table(title=f"[{_c('text_title')}]Paket Tersedia - {family_name}[/]", box=MINIMAL_DOUBLE_HEAD, expand=True)
-        table.add_column("No", justify="center", style=_c("text_number"), width=6)
+        table.add_column("No", justify="right", style=_c("text_number"), width=6)
         table.add_column("Variant", style=_c("text_sub"))
         table.add_column("Nama Paket", style=_c("text_body"))
-        table.add_column("Harga", style=_c("text_money"), justify="right")
+        table.add_column("Harga", style=_c("text_money"), justify="left")
 
         option_number = 1
         for variant in package_variants:
