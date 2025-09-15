@@ -89,7 +89,7 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
         if option_order != -1:
             menu.add_row("0", "Tambah ke Bookmark")
         menu.add_row("00", "Kembali ke daftar paket")
-        console.print(Panel(menu, title="", border_style=_c("border_primary"), padding=(1, 0), expand=True))
+        console.print(Panel(menu, title="", border_style=_c("border_primary"), padding=(0, 0), expand=True))
 
         choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
         if choice == "00":
