@@ -52,3 +52,16 @@ def display_html(html_text, width=80):
     parser = HTMLToText(width=width)
     parser.feed(html_text)
     return parser.get_text()
+
+def _c(key: str) -> str:
+    theme = {
+        "text_title": "bold white on dark_green",
+        "text_body": "white",
+        "text_key": "cyan",
+        "text_number": "bold yellow",
+        "text_sub": "dim",
+        "text_err": "bold red",
+        "border_info": "green",
+        "border_primary": "cyan",
+    }
+    return theme.get(key, "white")
