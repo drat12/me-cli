@@ -218,7 +218,7 @@ def fetch_my_packages():
     my_packages = []
 
     clear_screen()
-    console.print(Panel("[bold]Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=True))
+    console.print(Panel("[bold]Daftar Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=True))
 
     for idx, quota in enumerate(quotas, 1):
         quota_code = quota["quota_code"]
@@ -261,4 +261,3 @@ def fetch_my_packages():
         return None
 
     pause()
-
