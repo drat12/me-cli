@@ -68,7 +68,9 @@ def show_main_menu(number, balance, balance_expired_at):
     info.add_row("Masa Aktif", f"[{_c('text_date')}]{expired_at_dt}[/]")
     _print_centered_panel(info, title=f"[{_c('text_title')}]Informasi Akun[/]", border_style=_c("border_info"))
 
-    menu = Table(show_header=False, box=ROUNDED, padding=(0, 1), expand=True)
+from rich.box import MINIMAL_DOUBLE_HEAD
+
+    menu = Table(show_header=False, box=MINIMAL_DOUBLE_HEAD, padding=(0, 1), expand=True)
     menu.add_column("key", justify="right", style=_c("text_number"), no_wrap=True, width=4)
     menu.add_column("desc", style=_c("text_body"))
     menu.add_row("[bold]1[/]", "Login/Ganti akun")
@@ -79,7 +81,13 @@ def show_main_menu(number, balance, balance_expired_at):
     menu.add_row("[bold]00[/]", "Bookmark Paket")
     menu.add_row("[bold]69[/]", f"[{_c('text_sub')}]Ganti Gaya[/]")
     menu.add_row("[bold]99[/]", f"[{_c('text_err')}]Tutup aplikasi[/]")
-    _print_centered_panel(menu, title=f"[{_c('text_title')}]Menu[/]", border_style=_c("border_primary"))
+
+_print_centered_panel(
+    menu,
+    title=f"[{_c('text_title')}]Menu[/]",
+    border_style=_c("border_primary"),
+    padding=(1, 0)  # atas-bawah renggang, kiri-kanan rapat
+)
 
 # ========== Menu Ganti Tema ==========
 
