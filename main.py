@@ -33,7 +33,7 @@ def _print_centered_panel(renderable, title="", border_style=""):
         renderable,
         title=title,
         border_style=border_style,
-        padding=(1, 1),  # atas-bawah renggang, kiri-kanan rapat
+        padding=(0, 0),  # atas-bawah renggang, kiri-kanan rapat
         expand=True,
         title_align="center"
     )
