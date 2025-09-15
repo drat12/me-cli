@@ -74,43 +74,41 @@ def show_main_menu(number, balance, balance_expired_at):
 
 # ========== Tema Preset ==========
 
-def show_theme_presets():
-    console.print(f"\n[{_c('text_title')}]Ganti Tema (Preset)[/{_c('text_title')}]")
-    from app.theme import THEMES  # Import lokal agar tidak circular
-    from app.theme import get_active_theme_name
+def menu_ganti_theme():
+    clear_screen()
+    from app.theme import THEMES, get_active_theme_name
+
     theme_names = list(THEMES.keys())
-    table = Table(show_header=True, box=ROUNDED, expand=True)
-    table.add_column("No", justify="center", style=_c("text_sub"))
-    table.add_column("Nama Preset", style=_c("text_title"))
-    table.add_column("Preview Warna", style=_c("text_body"))
+    table = Table(title=f"[{_c('text_title')}]Daftar Tema[/]", box=ROUNDED, expand=True)
+    table.add_column("No", justify="center", style=_c("text_number"), width=6)
+    table.add_column("Nama Tema", style=_c("text_body"))
+    table.add_column("Preview", style=_c("text_body"))
+
     for idx, name in enumerate(theme_names, 1):
         preset = THEMES[name]
         preview = (
-            f"[{preset['border_primary']}]■[/{preset['border_primary']}] "
-            f"[{preset['border_info']}]■[/{preset['border_info']}] "
-            f"[{preset['border_success']}]■[/{preset['border_success']}] "
-            f"[{preset['border_error']}]■[/{preset['border_error']}] "
-            f"[{preset['text_title']}]A[/{preset['text_title']}]"
+            f"[{preset['border_primary']}]■[/] "
+            f"[{preset['border_info']}]■[/] "
+            f"[{preset['border_success']}]■[/] "
+            f"[{preset['border_error']}]■[/] "
+            f"[{preset['text_title']}]A[/]"
         )
         aktif = " (aktif)" if name == get_active_theme_name() else ""
         table.add_row(str(idx), f"{name}{aktif}", preview)
-    console.print(table)
 
-def menu_ganti_theme():
-    clear_screen()
-    from app.theme import THEMES
-    show_theme_presets()
-    theme_names = list(THEMES.keys())
+    panel = Panel(table, title=f"[{_c('text_title')}]Pilih Tema[/]", border_style=_c("border_info"), padding=(0, 2), expand=True)
+    console.print(panel)
+
     pilihan = console.input(f"\n[{_c('text_sub')}]Masukkan nomor tema yang diinginkan:[/{_c('text_sub')}] ").strip()
     try:
         idx = int(pilihan) - 1
         if idx < 0 or idx >= len(theme_names):
             pesan_error("Pilihan tema tidak valid.")
-        elif theme_names[idx] == theme_names[idx]:
-            pesan_info(f"Tema '{theme_names[idx]}' sudah aktif.")
         else:
-            set_theme(theme_names[idx])
-            pesan_sukses(f"Tema berhasil diganti ke '{theme_names[idx]}'.")
+            nama_tema = theme_names[idx]
+            from app.theme import set_theme
+            set_theme(nama_tema)
+            pesan_sukses(f"Tema berhasil diganti ke '{nama_tema}'.")
     except Exception:
         pesan_error("Input tidak valid.")
     pause()
