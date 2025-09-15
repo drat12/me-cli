@@ -195,7 +195,7 @@ def fetch_my_packages():
     api_key = AuthInstance.api_key
     tokens = AuthInstance.get_active_tokens()
     if not tokens:
-        console.print(f"[{_c('text_err')}]Token pengguna tidak ditemukan.[/{_c('text_err')}]")
+        console.print("Token pengguna tidak ditemukan.", style=_c("text_err"))
         pause()
         return None
 
@@ -207,10 +207,10 @@ def fetch_my_packages():
         "family_member_id": ""
     }
 
-    console.print(f"[{_c('text_sub')}]Mengambil daftar paket aktif...[/{_c('text_sub')}]")
+    console.print("Mengambil daftar paket aktif...", style=_c("text_sub"))
     res = send_api_request(api_key, path, payload, id_token, "POST")
     if res.get("status") != "SUCCESS":
-        console.print(f"[{_c('text_err')}]Gagal mengambil paket.[/{_c('text_err')}]")
+        console.print("Gagal mengambil paket.", style=_c("text_err"))
         pause()
         return None
 
@@ -232,10 +232,10 @@ def fetch_my_packages():
 
         isi = (
             f"[bold]{name}[/bold]\n"
-            f"[{_c('text_sub')}]Nomor:[/] [bold { _c('text_number') }]{idx}[/bold]\n"
-            f"[{_c('text_sub')}]Family Code:[/] [bold { _c('text_key') }]{family_code}[/bold]\n"
-            f"[{_c('text_sub')}]Group Code:[/] [bold { _c('text_key') }]{group_code}[/bold]\n"
-            f"[{_c('text_sub')}]Quota Code:[/] [bold { _c('text_key') }]{quota_code}[/bold]"
+            f"[{_c('text_sub')}]Nomor:[/] [bold]{idx}[/bold]\n"
+            f"[{_c('text_sub')}]Family Code:[/] [bold]{family_code}[/bold]\n"
+            f"[{_c('text_sub')}]Group Code:[/] [bold]{group_code}[/bold]\n"
+            f"[{_c('text_sub')}]Quota Code:[/] [bold]{quota_code}[/bold]"
         )
 
         console.print(Panel(isi, border_style=_c("border_primary"), padding=(1, 2), expand=True))
@@ -245,15 +245,15 @@ def fetch_my_packages():
             "quota_code": quota_code,
         })
 
-    console.print(f"[{_c('text_sub')}]Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.[/{_c('text_sub')}]")
-    choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
+    console.print("Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.", style=_c("text_sub"))
+    choice = console.input("Pilihan: ").strip()
 
     if choice == "00":
         return None
 
     selected_pkg = next((pkg for pkg in my_packages if str(pkg["number"]) == choice), None)
     if not selected_pkg:
-        console.print(f"[{_c('text_err')}]Paket tidak ditemukan. Silakan coba lagi.[/{_c('text_err')}]")
+        console.print("Paket tidak ditemukan. Silakan coba lagi.", style=_c("text_err"))
         pause()
         return None
 
