@@ -1,23 +1,21 @@
 from app.client.engsel import get_family
 from app.menus.package import show_package_details
 from app.service.auth import AuthInstance
-from app.menus.util import clear_screen, pause
 from app.service.bookmark import BookmarkInstance
+from app.menus.util import clear_screen, pause, pesan_error, pesan_info, pesan_sukses
+from app.theme import _c, console
 
 from rich.panel import Panel
 from rich.table import Table
 from rich.box import MINIMAL_DOUBLE_HEAD
 from rich.align import Align
 
-from app.theme import _c, console
-from app.menus.util import pesan_error, pesan_info, pesan_sukses
-
 def tampilkan_header():
     header_text = Align.center(f"[{_c('text_title')}]Bookmark Paket[/]")
     panel = Panel(
         header_text,
         border_style=_c("border_primary"),
-        padding=(1, 2),
+        padding=(1, 4),
         expand=True
     )
     console.print(panel)
@@ -36,13 +34,13 @@ def tampilkan_bookmarks(bookmarks):
         table,
         title=f"[{_c('text_title')}]Daftar Bookmark[/]",
         border_style=_c("border_info"),
-        padding=(0, 0),
+        padding=(1, 2),
         expand=True
     )
     console.print(panel)
 
 def tampilkan_menu_opsi():
-    opsi = Table.grid(padding=(0, 1))
+    opsi = Table.grid(padding=(0, 2))
     opsi.add_column(justify="right", style=_c("text_number"))
     opsi.add_column(style=_c("text_body"))
     opsi.add_row("00", "Kembali ke menu utama")
