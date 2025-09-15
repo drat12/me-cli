@@ -46,7 +46,7 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
     info.add_row("Nama", f"[{_c('text_value')}]{title}[/]")
     info.add_row("Harga", f"[{_c('text_money')}]Rp {price:,}[/]")
     info.add_row("Masa Aktif", f"[{_c('text_date')}]{validity}[/]")
-    console.print(Panel(info, title=f"[{_c('text_title')}]Detail Paket[/]", border_style=_c("border_info"), padding=(1, 0), expand=True))
+    console.print(Panel(info, title=f"[{_c('text_title')}]Detail Paket[/]", border_style=_c("border_info"), padding=(0, 0), expand=True))
 
     benefits = package["package_option"].get("benefits", [])
     if benefits:
@@ -68,7 +68,7 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
                 else:
                     value = str(total)
             benefit_table.add_row(name, value)
-        console.print(Panel(benefit_table, title=f"[{_c('text_title')}]Benefit Paket[/]", border_style=_c("border_success"), padding=(1, 0), expand=True))
+        console.print(Panel(benefit_table, title=f"[{_c('text_title')}]Benefit Paket[/]", border_style=_c("border_success"), padding=(0, 0), expand=True))
 
     addons = get_addons(api_key, tokens, package_option_code)
     if addons:
