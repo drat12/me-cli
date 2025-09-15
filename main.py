@@ -200,4 +200,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pesan_info("Keluar dari aplikasi.")
     except Exception as e:
-        pesan_error(f"Terjadi kesalahan: {e
+        pesan_error(f"Terjadi kesalahan: {e}")
