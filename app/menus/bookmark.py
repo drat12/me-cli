@@ -17,7 +17,7 @@ def tampilkan_header():
     panel = Panel(
         header_text,
         border_style=_c("border_primary"),
-        padding=(1, 4),
+        padding=(1, 2),
         expand=True
     )
     console.print(panel)
@@ -42,7 +42,7 @@ def tampilkan_bookmarks(bookmarks):
     console.print(panel)
 
 def tampilkan_menu_opsi():
-    opsi = Table.grid(padding=(0, 2))
+    opsi = Table.grid(padding=(0, 1))
     opsi.add_column(justify="right", style=_c("text_number"))
     opsi.add_column(style=_c("text_body"))
     opsi.add_row("00", "Kembali ke menu utama")
