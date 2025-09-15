@@ -82,9 +82,9 @@ def show_account_menu():
             add_user = False
             continue
 
-        # Tabel akun tersimpan (tanpa judul internal)
+        # Tabel akun tersimpan
         akun_table = Table(box=ROUNDED, expand=True)
-        akun_table.add_column("", justify="right", style=_c("text_number"))
+        akun_table.add_column("", justify="right", style=_c("text_number"), width=6)
         akun_table.add_column("Nomor", style=_c("text_body"))
 
         if not users:
@@ -105,8 +105,8 @@ def show_account_menu():
         console.print(akun_panel)
 
         # Tabel command
-        cmd_table = Table(show_header=False, box=ROUNDED, expand=True, padding=(0, 1))
-        cmd_table.add_column("Kode", justify="right", style=_c("text_number"), width=4)
+        cmd_table = Table(show_header=False, box=ROUNDED, expand=True)
+        cmd_table.add_column("Kode", justify="center", style=_c("text_number"), width=6)
         cmd_table.add_column("Deskripsi", style=_c("text_body"))
         cmd_table.add_row("0", "Tambah Akun")
         cmd_table.add_row("00", "Kembali ke Menu Utama")
