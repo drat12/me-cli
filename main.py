@@ -33,7 +33,7 @@ def _print_centered_panel(renderable, title="", border_style=""):
         renderable,
         title=title,
         border_style=border_style,
-        padding=(1, 0),  # atas-bawah renggang, kiri-kanan rapat
+        padding=(1, 1),  # atas-bawah renggang, kiri-kanan rapat
         expand=True,
         title_align="center"
     )
@@ -86,7 +86,7 @@ def menu_ganti_theme():
     active_theme = get_active_theme_name()
 
     table = Table(box=MINIMAL_DOUBLE_HEAD, expand=True)
-    table.add_column("No", justify="center", style=_c("text_number"), width=6)
+    table.add_column("", justify="right", style=_c("text_number"), width=6)
     table.add_column("Nama Tema", style=_c("text_body"))
     table.add_column("Preview", style=_c("text_body"))
 
