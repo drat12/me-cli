@@ -36,7 +36,7 @@ def tampilkan_bookmarks(bookmarks):
         table,
         title=f"[{_c('text_title')}]Daftar Bookmark[/]",
         border_style=_c("border_info"),
-        padding=(1, 2),
+        padding=(0, 0),
         expand=True
     )
     console.print(panel)
