@@ -73,9 +73,9 @@ def show_package_details(api_key, tokens, package_option_code, is_enterprise, op
     addons = get_addons(api_key, tokens, package_option_code)
     if addons:
         addon_text = json.dumps(addons, indent=2)
-        console.print(Panel(addon_text, title=f"[{_c('text_title')}]Addons[/]", border_style=_c("border_info"), padding=(1, 2), expand=True))
+        console.print(Panel(addon_text, title=f"[{_c('text_title')}]Addons[/]", border_style=_c("border_info"), padding=(0, 0), expand=True))
 
-    console.print(Panel(detail, title=f"[{_c('text_title')}]Syarat & Ketentuan[/]", border_style=_c("border_warning"), padding=(1, 2), expand=True))
+    console.print(Panel(detail, title=f"[{_c('text_title')}]Syarat & Ketentuan[/]", border_style=_c("border_warning"), padding=(0, 0), expand=True))
 
     while True:
         menu = Table(show_header=False, box=MINIMAL_DOUBLE_HEAD, expand=True)
