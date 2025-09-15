@@ -84,7 +84,7 @@ def show_account_menu():
 
         # Tabel akun tersimpan (tanpa judul internal)
         akun_table = Table(box=ROUNDED, expand=True)
-        akun_table.add_column("No", justify="right", style=_c("text_number"))
+        akun_table.add_column("", justify="right", style=_c("text_number"))
         akun_table.add_column("Nomor", style=_c("text_body"))
 
         if not users:
