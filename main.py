@@ -33,7 +33,7 @@ def _print_centered_panel(renderable, title="", border_style=""):
         renderable,
         title=title,
         border_style=border_style,
-        padding=(0, 0),  # atas-bawah renggang, kiri-kanan rapat
+        padding=(0, 0),
         expand=True,
         title_align="center"
     )
@@ -41,11 +41,11 @@ def _print_centered_panel(renderable, title="", border_style=""):
 
 def show_banner():
     clear_screen()
-    banner_text = f"[{_c('text_title')}]Selamat Datang di MyXL CLI v8.7.0[/]"
+    banner_text = f"[{_c('text_title')}]DOR MyXL CLI v8.7.0[/]"
     centered_text = Align.center(banner_text)
     panel = Panel(
         centered_text,
-        title="barbex_id",
+        title="Selamat Datang di",
         title_align="center",
         border_style=_c("border_primary"),
         padding=(1, 4),
