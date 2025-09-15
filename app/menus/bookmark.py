@@ -32,7 +32,14 @@ def tampilkan_bookmarks(bookmarks):
     for idx, bm in enumerate(bookmarks, 1):
         table.add_row(str(idx), bm["family_name"], bm["variant_name"], bm["option_name"])
 
-    console.print(table)
+    panel = Panel(
+        table,
+        title=f"[{_c('text_title')}]Daftar Bookmark[/]",
+        border_style=_c("border_info"),
+        padding=(1, 2),
+        expand=True
+    )
+    console.print(panel)
 
 def tampilkan_menu_opsi():
     opsi = Table.grid(padding=(0, 2))
