@@ -19,7 +19,7 @@ from app.theme import _c, console, set_theme, get_active_theme_name, THEMES
 
 # ========== Utility Pesan ==========
 def pesan_error(msg):
-    console.print(msg, style=_c("text_err"))
+    console.print(f"[{_c('text_err')}]{msg}[/{_c('text_err')}]")
 
 def pesan_sukses(msg):
     console.print(f"[{_c('text_ok')}]{msg}[/{_c('text_ok')}]")
