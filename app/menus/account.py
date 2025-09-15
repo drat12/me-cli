@@ -4,7 +4,7 @@ from app.service.auth import AuthInstance
 from app.theme import _c, console
 from rich.table import Table
 from rich.panel import Panel
-from rich.box import ROUNDED
+from rich.box import MINIMAL_DOUBLE_HEAD
 
 # ========== Utility Pesan ==========
 def pesan_error(msg):
@@ -19,7 +19,7 @@ def pesan_info(msg):
 # ========== Login Prompt ==========
 def login_prompt(api_key: str):
     clear_screen()
-    console.print(Panel("Login ke MyXL", title="[bold]Login[/]", border_style=_c("border_primary")))
+    console.print(Panel("Login ke MyXL", title="[bold]Login[/]", border_style=_c("border_primary"), padding=(1, 4), expand=True))
     phone_number = console.input(f"[{_c('text_key')}]Masukkan nomor XL (628xxx):[/{_c('text_key')}] ").strip()
 
     if not phone_number.startswith("628") or not phone_number.isdigit() or not (10 <= len(phone_number) <= 14):
@@ -83,7 +83,7 @@ def show_account_menu():
             continue
 
         # Tabel akun tersimpan
-        akun_table = Table(box=ROUNDED, expand=True)
+        akun_table = Table(box=MINIMAL_DOUBLE_HEAD, expand=True)
         akun_table.add_column("", justify="right", style=_c("text_number"), width=6)
         akun_table.add_column("Nomor", style=_c("text_body"))
 
@@ -97,16 +97,16 @@ def show_account_menu():
 
         akun_panel = Panel(
             akun_table,
-            title=f"[{_c('text_title')}]Akun Tersimpan[/]",
+            title="",  # judul
             border_style=_c("border_info"),
-            padding=(0, 2),
+            padding=(0, 0),
             expand=True
         )
         console.print(akun_panel)
 
         # Tabel command
-        cmd_table = Table(show_header=False, box=ROUNDED, expand=True)
-        cmd_table.add_column("Kode", justify="right", style=_c("text_number"), width=6)
+        cmd_table = Table(show_header=False, box=MINIMAL_DOUBLE_HEAD, expand=True)
+        cmd_table.add_column("Kode", justify="center", style=_c("text_number"), width=6)
         cmd_table.add_column("Deskripsi", style=_c("text_body"))
         cmd_table.add_row("0", "Tambah Akun")
         cmd_table.add_row("00", "Kembali ke Menu Utama")
@@ -115,9 +115,9 @@ def show_account_menu():
 
         cmd_panel = Panel(
             cmd_table,
-            title=f"[{_c('text_title')}]Command[/]",
+            title="",  # judul
             border_style=_c("border_primary"),
-            padding=(0, 2),
+            padding=(0, 0),
             expand=True
         )
         console.print(cmd_panel)
