@@ -218,10 +218,8 @@ def fetch_my_packages():
     my_packages = []
 
     clear_screen()
-    # Judul di tengah dalam box penuh layar
     console.print(Panel("[bold]Paket Saya[/bold]", style=_c("border_info"), padding=(0, 2), expand=True))
 
-    # Tampilkan setiap paket dalam box individual
     for idx, quota in enumerate(quotas, 1):
         quota_code = quota["quota_code"]
         group_code = quota["group_code"]
@@ -237,7 +235,7 @@ def fetch_my_packages():
 [dim]Nomor:[/] {idx}
 [dim]Family Code:[/] {family_code}
 [dim]Group Code:[/] {group_code}
-[dim]Kode Paket:[/] {quota_code}
+[dim]Quota Code:[/] {quota_code}
 """
         console.print(Panel(isi.strip(), border_style=_c("border_primary"), padding=(1, 2), expand=True))
 
@@ -246,7 +244,6 @@ def fetch_my_packages():
             "quota_code": quota_code,
         })
 
-    # Input pilihan
     console.print(f"[{_c('text_sub')}]Masukkan nomor paket untuk membeli ulang, atau '00' untuk kembali.[/{_c('text_sub')}]")
     choice = console.input(f"[{_c('text_sub')}]Pilihan:[/{_c('text_sub')}] ").strip()
 
@@ -264,3 +261,4 @@ def fetch_my_packages():
         return None
 
     pause()
+
