@@ -21,18 +21,21 @@ def show_hot_menu():
         try:
             response = requests.get(url, timeout=30)
             response.raise_for_status()
-            try:
-                hot_packages = response.json()
-            except Exception:
-                console.print("Data HOT tidak dalam format JSON.", style=_c("text_err"))
-                pause()
-                return None
         except Exception as e:
             console.print(f"Gagal mengambil data hot package: {e}", style=_c("text_err"))
             pause()
             return None
 
-        if not isinstance(hot_packages, list) or not hot_packages:
+        try:
+            hot_packages = response.json()
+            if not isinstance(hot_packages, list):
+                raise ValueError("Format JSON tidak sesuai (harus list).")
+        except Exception as e:
+            console.print(f"Data HOT tidak valid: {e}", style=_c("text_err"))
+            pause()
+            return None
+
+        if not hot_packages:
             console.print("Tidak ada paket HOT tersedia saat ini.", style=_c("text_warn"))
             pause()
             return None
@@ -45,7 +48,12 @@ def show_hot_menu():
         table.add_column("Paket", style=_c("text_value"))
 
         for idx, p in enumerate(hot_packages):
-            table.add_row(str(idx + 1), p.get("family_name", "-"), p.get("variant_name", "-"), p.get("option_name", "-"))
+            table.add_row(
+                str(idx + 1),
+                str(p.get("family_name", "-")),
+                str(p.get("variant_name", "-")),
+                str(p.get("option_name", "-"))
+            )
 
         console.print(Panel(table, title="", border_style=_c("border_info"), padding=(1, 2), expand=True))
         console.print(f"[{_c('text_sub')}]00 untuk kembali ke menu utama[/{_c('text_sub')}]")
@@ -68,7 +76,7 @@ def show_hot_menu():
                 continue
 
             family_data = get_family(api_key, tokens, family_code, is_enterprise)
-            if not family_data:
+            if not isinstance(family_data, dict):
                 console.print("Gagal mengambil data family.", style=_c("text_err"))
                 pause()
                 continue
